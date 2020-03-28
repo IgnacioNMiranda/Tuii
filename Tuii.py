@@ -112,6 +112,7 @@ with open('archivo', 'r') as f:
         print(tok)
 
 
+
 #Reglas de Sintaxis
 
 # ini → main | vacio
@@ -131,18 +132,25 @@ def p_main(p):
     p[0] = (p[1], p[2], p[3], p[4])
 
 
+def p_vacio(p):
+    '''
+    vacio :
+    '''
+    p[0] = None
+
+
 # sentence → single_stmt | if_stmt6 | single_stmt sentence | if_stmt sentence
 def p_sentence(p):
     '''
     sentence : single_stmt
-            | if_stmt6
+            | if_stmt
             | single_stmt sentence
             | if_stmt sentence
     '''
     if len(p) == 2:
-        p[0] = Atom(p[1], 1)
-    elif len(p) == 3:
-        p[0] = Atom(p[1], p[2])
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
 
 
 # single_stmt → decl | single_op | print
@@ -177,9 +185,23 @@ def p_term(p):
     '''
     term : DIGIT
         | ID
-        | sum_function [operator term]
+        | sum_function operator_term
     '''
-    #???????? khie pero khie
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
+
+
+def p_operator_term(p):
+    '''
+    operator_term : operator_term operator term
+                  | vacio
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2], p[3])
 
 
 # sum_function → SUM LP ID RP
@@ -190,7 +212,7 @@ def p_sum_function(p):
     p[0] = (p[1], p[2], p[3], p[4])
 
 
-#operator
+#operator -> MAS | MENOS | MUL | DIV
 def p_operator(p):
     '''
     operator : MAS
@@ -201,38 +223,65 @@ def p_operator(p):
     p[0] = p[1]
 
 
-#matrix_decl
+#matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC
 def p_matrix_decl(p):
     '''
     matrix_decl : MATRIX ID IGUAL LC matrix_value RC PC
     '''
+    p[0] = (p[1], p[2], p[3], p[4], p[5],p[6], p[7])
 
 
-#matrix_value
+#matrix_value ->  DIGIT [(COMA matrix_value)] [matrix_nextvalue]
 def p_matrix_value(p):
     '''
-    matrix_value : DIGIT
-                 | DIGIT COMA matrix_value
-                 | DIGIT COMA matrix_value matrix_nextvalue
+    matrix_value : DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
     '''
+    p[0] = (p[1], p[2], p[3])
 
 
-#matrix_nextvalue
+def p_possibly_next_matrix_row_value(p):
+    '''
+    possibly_next_matrix_row_value : COMA matrix_value possibly_next_matrix_row_value
+                                   | vacio
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2], p[3])
+
+
+def p_possibly_next_matrix_row(p):
+    '''
+    possibly_next_matrix_row : matrix_nextvalue possibly_next_matrix_row
+                             | vacio
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
+
+
+#matrix_nextvalue -> BV matrix_value
 def p_matrix_nextvalue(p):
     '''
     matrix_nextvalue : BV matrix_value
-                     | /*empty*/
+                     | vacio
     '''
+    if len(p) == 0:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
 
 
-#single_op
+#single_op -> ID IGUAL term
 def p_single_op(p):
     '''
     single_op : ID IGUAL term
     '''
     p[0] = (p[2], p[1], p[3])
 
-#print
+
+#print -> PRINT LP (ID | TEXT) RP
 def p_print(p):
     '''
     print : PRINT LP ID RP
@@ -241,17 +290,22 @@ def p_print(p):
     p[0] = p[1]
 
 
-#if_stmt
+#if_stmt -> IF ID LK single_stmt RK [ELSE LK single_stmt RK
 def p_if_stmt(p):
     '''
     if_stmt : IF ID LK single_stmt RK
             | IF ID LK single_stmt RK ELSE LK single_stmt RK
     '''
+    if len(p) == 6:
+        p[0] = (p[1], p[2], p[3], p[4], p[5])
+    else:
+        p[0] = (p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
 
 
 def p_error(p):
     print("Error de sintaxis!!!")
 #
+
 
 #Construcción del analizador sintáctico
 parser = yacc.yacc()
