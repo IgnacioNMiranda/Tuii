@@ -114,6 +114,82 @@ with open('archivo', 'r') as f:
 
 #Reglas de Sintaxis
 
+# ini → main | vacio
+def p_ini(p):
+    '''
+    ini : main
+        | vacio
+    '''
+    print(p[1])
+
+
+# main → MAIN LK sentence RK
+def p_main(p):
+    '''
+    main : MAIN LK sentence RK
+    '''
+    p[0] = (p[1], p[2], p[3], p[4])
+
+
+# sentence → single_stmt | if_stmt6 | single_stmt sentence | if_stmt sentence
+def p_sentence(p):
+    '''
+    sentence : single_stmt
+            | if_stmt6
+            | single_stmt sentence
+            | if_stmt sentence
+    '''
+    if len(p) == 2:
+        p[0] = Atom(p[1], 1)
+    elif len(p) == 3:
+        p[0] = Atom(p[1], p[2])
+
+
+# single_stmt → decl | single_op | print
+def p_single_stmt(p):
+    '''
+    single_stmt : decl
+                | single_op
+                | print
+    '''
+    p[0] = p[1]
+
+
+# decl → int_decl | matrix_decl
+def p_decl(p):
+    '''
+    decl : int_decl
+        | matrix_decl
+    '''
+    p[0] = p[1]
+
+
+# int_decl → INT ID IGUAL term PC
+def p_int_decl(p):
+    '''
+      int_decl : INT ID IGUAL term PC
+    '''
+    p[0] = ('=', p[1], p[2], p[4], p[5])
+
+
+# term → DIGIT | ID | sum_function [operator term]
+def p_term(p):
+    '''
+    term : DIGIT
+        | ID
+        | sum_function [operator term]
+    '''
+    #???????? khie pero khie
+
+
+# sum_function → SUM LP ID RP
+def p_sum_function(p):
+    '''
+    sum_function : SUM LP ID RP
+    '''
+    p[0] = (p[1], p[2], p[3], p[4])
+
+
 #operator
 def p_operator(p):
     '''
