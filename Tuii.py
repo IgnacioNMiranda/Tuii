@@ -1,6 +1,6 @@
 import ply.lex as lex
 import ply.yacc as yacc
-#import sys
+import sys
 
 
 # 'RE':'NombreToken'
@@ -15,6 +15,7 @@ reserved = {
 }
 
 
+#Tokens
 tokens = [
     'ID',
     'LP',
@@ -103,17 +104,85 @@ def t_newline(t):
 
 #Ejecución del lexer
 lexer = lex.lex()
-
 with open('archivo', 'r') as f:
     contents = f.read()
     lex.input(contents)
     print("Structure: LexToken(type,value,lineno,lexpos)\n")
     for tok in lexer:
         print(tok)
-#Fin de la ejecución del lexer
 
 
 #Reglas de Sintaxis
 
+#operator
+def p_operator(p):
+    '''
+    operator : MAS
+            | MENOS
+            | MUL
+            | DIV
+    '''
+    p[0] = p[1]
 
+
+#matrix_decl
+def p_matrix_decl(p):
+    '''
+    matrix_decl : MATRIX ID IGUAL LC matrix_value RC PC
+    '''
+
+
+#matrix_value
+def p_matrix_value(p):
+    '''
+    matrix_value : DIGIT
+                 | DIGIT COMA matrix_value
+                 | DIGIT COMA matrix_value matrix_nextvalue
+    '''
+
+
+#matrix_nextvalue
+def p_matrix_nextvalue(p):
+    '''
+    matrix_nextvalue : BV matrix_value
+                     | /*empty*/
+    '''
+
+
+#single_op
+def p_single_op(p):
+    '''
+    single_op : ID IGUAL term
+    '''
+    p[0] = (p[2], p[1], p[3])
+
+#print
+def p_print(p):
+    '''
+    print : PRINT LP ID RP
+          | PRINT LP TEXT RP
+    '''
+    p[0] = p[1]
+
+
+#if_stmt
+def p_if_stmt(p):
+    '''
+    if_stmt : IF ID LK single_stmt RK
+            | IF ID LK single_stmt RK ELSE LK single_stmt RK
+    '''
+
+
+def p_error(p):
+    print("Error de sintaxis!!!")
 #
+
+#Construcción del analizador sintáctico
+parser = yacc.yacc()
+
+while True:
+    try:
+        s = input('>> ')
+    except EOFError:
+        break
+    parser.parse(s)
