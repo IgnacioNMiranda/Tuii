@@ -1,0 +1,10 @@
+main {
+    int x = -5;
+    int y = 6;
+    matrix matr = [1,2,3|4,5,6];
+    #comentario#
+    if x {
+        print("hola");
+    }
+    print(sum(x));
+}
