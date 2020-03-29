@@ -33,15 +33,15 @@ Rule 23    operator -> MUL
 Rule 24    operator -> DIV
 Rule 25    matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC
 Rule 26    matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
-Rule 27    possibly_next_matrix_row_value -> COMA matrix_value possibly_next_matrix_row_value
+Rule 27    possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value
 Rule 28    possibly_next_matrix_row_value -> vacio
-Rule 29    possibly_next_matrix_row -> matrix_nextvalue possibly_next_matrix_row
+Rule 29    possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue
 Rule 30    possibly_next_matrix_row -> vacio
 Rule 31    matrix_nextvalue -> BV matrix_value
 Rule 32    matrix_nextvalue -> vacio
-Rule 33    single_op -> ID IGUAL term
-Rule 34    print -> PRINT LP ID RP
-Rule 35    print -> PRINT LP TEXT RP
+Rule 33    single_op -> ID IGUAL term PC
+Rule 34    print -> PRINT LP ID RP PC
+Rule 35    print -> PRINT LP TEXT RP PC
 Rule 36    if_stmt -> IF ID LK single_stmt RK
 Rule 37    if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK
 
@@ -65,7 +65,7 @@ MAS                  : 21
 MATRIX               : 25
 MENOS                : 22
 MUL                  : 23
-PC                   : 14 25
+PC                   : 14 25 33 34 35
 PRINT                : 34 35
 RC                   : 25
 RK                   : 3 36 37 37
@@ -154,9 +154,9 @@ state 5
     (37) if_stmt -> . IF ID LK single_stmt RK ELSE LK single_stmt RK
     (12) decl -> . int_decl
     (13) decl -> . matrix_decl
-    (33) single_op -> . ID IGUAL term
-    (34) print -> . PRINT LP ID RP
-    (35) print -> . PRINT LP TEXT RP
+    (33) single_op -> . ID IGUAL term PC
+    (34) print -> . PRINT LP ID RP PC
+    (35) print -> . PRINT LP TEXT RP PC
     (14) int_decl -> . INT ID IGUAL term PC
     (25) matrix_decl -> . MATRIX ID IGUAL LC matrix_value RC PC
 
@@ -197,9 +197,9 @@ state 7
     (37) if_stmt -> . IF ID LK single_stmt RK ELSE LK single_stmt RK
     (12) decl -> . int_decl
     (13) decl -> . matrix_decl
-    (33) single_op -> . ID IGUAL term
-    (34) print -> . PRINT LP ID RP
-    (35) print -> . PRINT LP TEXT RP
+    (33) single_op -> . ID IGUAL term PC
+    (34) print -> . PRINT LP ID RP PC
+    (35) print -> . PRINT LP TEXT RP PC
     (14) int_decl -> . INT ID IGUAL term PC
     (25) matrix_decl -> . MATRIX ID IGUAL LC matrix_value RC PC
 
@@ -234,9 +234,9 @@ state 8
     (37) if_stmt -> . IF ID LK single_stmt RK ELSE LK single_stmt RK
     (12) decl -> . int_decl
     (13) decl -> . matrix_decl
-    (33) single_op -> . ID IGUAL term
-    (34) print -> . PRINT LP ID RP
-    (35) print -> . PRINT LP TEXT RP
+    (33) single_op -> . ID IGUAL term PC
+    (34) print -> . PRINT LP ID RP PC
+    (35) print -> . PRINT LP TEXT RP PC
     (14) int_decl -> . INT ID IGUAL term PC
     (25) matrix_decl -> . MATRIX ID IGUAL LC matrix_value RC PC
 
@@ -302,7 +302,7 @@ state 12
 
 state 13
 
-    (33) single_op -> ID . IGUAL term
+    (33) single_op -> ID . IGUAL term PC
 
     IGUAL           shift and go to state 23
 
@@ -333,8 +333,8 @@ state 15
 
 state 16
 
-    (34) print -> PRINT . LP ID RP
-    (35) print -> PRINT . LP TEXT RP
+    (34) print -> PRINT . LP ID RP PC
+    (35) print -> PRINT . LP TEXT RP PC
 
     LP              shift and go to state 24
 
@@ -384,7 +384,7 @@ state 22
 
 state 23
 
-    (33) single_op -> ID IGUAL . term
+    (33) single_op -> ID IGUAL . term PC
     (15) term -> . DIGIT
     (16) term -> . ID
     (17) term -> . sum_function operator_term
@@ -399,8 +399,8 @@ state 23
 
 state 24
 
-    (34) print -> PRINT LP . ID RP
-    (35) print -> PRINT LP . TEXT RP
+    (34) print -> PRINT LP . ID RP PC
+    (35) print -> PRINT LP . TEXT RP PC
 
     ID              shift and go to state 33
     TEXT            shift and go to state 34
@@ -429,9 +429,9 @@ state 27
     (11) single_stmt -> . print
     (12) decl -> . int_decl
     (13) decl -> . matrix_decl
-    (33) single_op -> . ID IGUAL term
-    (34) print -> . PRINT LP ID RP
-    (35) print -> . PRINT LP TEXT RP
+    (33) single_op -> . ID IGUAL term PC
+    (34) print -> . PRINT LP ID RP PC
+    (35) print -> . PRINT LP TEXT RP PC
     (14) int_decl -> . INT ID IGUAL term PC
     (25) matrix_decl -> . MATRIX ID IGUAL LC matrix_value RC PC
 
@@ -451,12 +451,6 @@ state 28
 
     (16) term -> ID .
 
-    IF              reduce using rule 16 (term -> ID .)
-    ID              reduce using rule 16 (term -> ID .)
-    PRINT           reduce using rule 16 (term -> ID .)
-    INT             reduce using rule 16 (term -> ID .)
-    MATRIX          reduce using rule 16 (term -> ID .)
-    RK              reduce using rule 16 (term -> ID .)
     PC              reduce using rule 16 (term -> ID .)
     MAS             reduce using rule 16 (term -> ID .)
     MENOS           reduce using rule 16 (term -> ID .)
@@ -466,26 +460,15 @@ state 28
 
 state 29
 
-    (33) single_op -> ID IGUAL term .
+    (33) single_op -> ID IGUAL term . PC
 
-    IF              reduce using rule 33 (single_op -> ID IGUAL term .)
-    ID              reduce using rule 33 (single_op -> ID IGUAL term .)
-    PRINT           reduce using rule 33 (single_op -> ID IGUAL term .)
-    INT             reduce using rule 33 (single_op -> ID IGUAL term .)
-    MATRIX          reduce using rule 33 (single_op -> ID IGUAL term .)
-    RK              reduce using rule 33 (single_op -> ID IGUAL term .)
+    PC              shift and go to state 38
 
 
 state 30
 
     (15) term -> DIGIT .
 
-    IF              reduce using rule 15 (term -> DIGIT .)
-    ID              reduce using rule 15 (term -> DIGIT .)
-    PRINT           reduce using rule 15 (term -> DIGIT .)
-    INT             reduce using rule 15 (term -> DIGIT .)
-    MATRIX          reduce using rule 15 (term -> DIGIT .)
-    RK              reduce using rule 15 (term -> DIGIT .)
     PC              reduce using rule 15 (term -> DIGIT .)
     MAS             reduce using rule 15 (term -> DIGIT .)
     MENOS           reduce using rule 15 (term -> DIGIT .)
@@ -504,36 +487,30 @@ state 31
     MENOS           reduce using rule 4 (vacio -> .)
     MUL             reduce using rule 4 (vacio -> .)
     DIV             reduce using rule 4 (vacio -> .)
-    IF              reduce using rule 4 (vacio -> .)
-    ID              reduce using rule 4 (vacio -> .)
-    PRINT           reduce using rule 4 (vacio -> .)
-    INT             reduce using rule 4 (vacio -> .)
-    MATRIX          reduce using rule 4 (vacio -> .)
-    RK              reduce using rule 4 (vacio -> .)
     PC              reduce using rule 4 (vacio -> .)
 
-    operator_term                  shift and go to state 38
-    vacio                          shift and go to state 39
+    operator_term                  shift and go to state 39
+    vacio                          shift and go to state 40
 
 state 32
 
     (20) sum_function -> SUM . LP ID RP
 
-    LP              shift and go to state 40
+    LP              shift and go to state 41
 
 
 state 33
 
-    (34) print -> PRINT LP ID . RP
+    (34) print -> PRINT LP ID . RP PC
 
-    RP              shift and go to state 41
+    RP              shift and go to state 42
 
 
 state 34
 
-    (35) print -> PRINT LP TEXT . RP
+    (35) print -> PRINT LP TEXT . RP PC
 
-    RP              shift and go to state 42
+    RP              shift and go to state 43
 
 
 state 35
@@ -548,14 +525,14 @@ state 35
     ID              shift and go to state 28
     SUM             shift and go to state 32
 
-    term                           shift and go to state 43
+    term                           shift and go to state 44
     sum_function                   shift and go to state 31
 
 state 36
 
     (25) matrix_decl -> MATRIX ID IGUAL . LC matrix_value RC PC
 
-    LC              shift and go to state 44
+    LC              shift and go to state 45
 
 
 state 37
@@ -563,10 +540,22 @@ state 37
     (36) if_stmt -> IF ID LK single_stmt . RK
     (37) if_stmt -> IF ID LK single_stmt . RK ELSE LK single_stmt RK
 
-    RK              shift and go to state 45
+    RK              shift and go to state 46
 
 
 state 38
+
+    (33) single_op -> ID IGUAL term PC .
+
+    IF              reduce using rule 33 (single_op -> ID IGUAL term PC .)
+    ID              reduce using rule 33 (single_op -> ID IGUAL term PC .)
+    PRINT           reduce using rule 33 (single_op -> ID IGUAL term PC .)
+    INT             reduce using rule 33 (single_op -> ID IGUAL term PC .)
+    MATRIX          reduce using rule 33 (single_op -> ID IGUAL term PC .)
+    RK              reduce using rule 33 (single_op -> ID IGUAL term PC .)
+
+
+state 39
 
     (17) term -> sum_function operator_term .
     (18) operator_term -> operator_term . operator term
@@ -579,26 +568,20 @@ state 38
   ! shift/reduce conflict for MENOS resolved as shift
   ! shift/reduce conflict for MUL resolved as shift
   ! shift/reduce conflict for DIV resolved as shift
-    IF              reduce using rule 17 (term -> sum_function operator_term .)
-    ID              reduce using rule 17 (term -> sum_function operator_term .)
-    PRINT           reduce using rule 17 (term -> sum_function operator_term .)
-    INT             reduce using rule 17 (term -> sum_function operator_term .)
-    MATRIX          reduce using rule 17 (term -> sum_function operator_term .)
-    RK              reduce using rule 17 (term -> sum_function operator_term .)
     PC              reduce using rule 17 (term -> sum_function operator_term .)
-    MAS             shift and go to state 47
-    MENOS           shift and go to state 48
-    MUL             shift and go to state 49
-    DIV             shift and go to state 50
+    MAS             shift and go to state 48
+    MENOS           shift and go to state 49
+    MUL             shift and go to state 50
+    DIV             shift and go to state 51
 
   ! MAS             [ reduce using rule 17 (term -> sum_function operator_term .) ]
   ! MENOS           [ reduce using rule 17 (term -> sum_function operator_term .) ]
   ! MUL             [ reduce using rule 17 (term -> sum_function operator_term .) ]
   ! DIV             [ reduce using rule 17 (term -> sum_function operator_term .) ]
 
-    operator                       shift and go to state 46
+    operator                       shift and go to state 47
 
-state 39
+state 40
 
     (19) operator_term -> vacio .
 
@@ -606,63 +589,47 @@ state 39
     MENOS           reduce using rule 19 (operator_term -> vacio .)
     MUL             reduce using rule 19 (operator_term -> vacio .)
     DIV             reduce using rule 19 (operator_term -> vacio .)
-    IF              reduce using rule 19 (operator_term -> vacio .)
-    ID              reduce using rule 19 (operator_term -> vacio .)
-    PRINT           reduce using rule 19 (operator_term -> vacio .)
-    INT             reduce using rule 19 (operator_term -> vacio .)
-    MATRIX          reduce using rule 19 (operator_term -> vacio .)
-    RK              reduce using rule 19 (operator_term -> vacio .)
     PC              reduce using rule 19 (operator_term -> vacio .)
-
-
-state 40
-
-    (20) sum_function -> SUM LP . ID RP
-
-    ID              shift and go to state 51
 
 
 state 41
 
-    (34) print -> PRINT LP ID RP .
+    (20) sum_function -> SUM LP . ID RP
 
-    IF              reduce using rule 34 (print -> PRINT LP ID RP .)
-    ID              reduce using rule 34 (print -> PRINT LP ID RP .)
-    PRINT           reduce using rule 34 (print -> PRINT LP ID RP .)
-    INT             reduce using rule 34 (print -> PRINT LP ID RP .)
-    MATRIX          reduce using rule 34 (print -> PRINT LP ID RP .)
-    RK              reduce using rule 34 (print -> PRINT LP ID RP .)
+    ID              shift and go to state 52
 
 
 state 42
 
-    (35) print -> PRINT LP TEXT RP .
+    (34) print -> PRINT LP ID RP . PC
 
-    IF              reduce using rule 35 (print -> PRINT LP TEXT RP .)
-    ID              reduce using rule 35 (print -> PRINT LP TEXT RP .)
-    PRINT           reduce using rule 35 (print -> PRINT LP TEXT RP .)
-    INT             reduce using rule 35 (print -> PRINT LP TEXT RP .)
-    MATRIX          reduce using rule 35 (print -> PRINT LP TEXT RP .)
-    RK              reduce using rule 35 (print -> PRINT LP TEXT RP .)
+    PC              shift and go to state 53
 
 
 state 43
 
-    (14) int_decl -> INT ID IGUAL term . PC
+    (35) print -> PRINT LP TEXT RP . PC
 
-    PC              shift and go to state 52
+    PC              shift and go to state 54
 
 
 state 44
 
+    (14) int_decl -> INT ID IGUAL term . PC
+
+    PC              shift and go to state 55
+
+
+state 45
+
     (25) matrix_decl -> MATRIX ID IGUAL LC . matrix_value RC PC
     (26) matrix_value -> . DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
 
-    DIGIT           shift and go to state 54
+    DIGIT           shift and go to state 57
 
-    matrix_value                   shift and go to state 53
+    matrix_value                   shift and go to state 56
 
-state 45
+state 46
 
     (36) if_stmt -> IF ID LK single_stmt RK .
     (37) if_stmt -> IF ID LK single_stmt RK . ELSE LK single_stmt RK
@@ -673,10 +640,10 @@ state 45
     INT             reduce using rule 36 (if_stmt -> IF ID LK single_stmt RK .)
     MATRIX          reduce using rule 36 (if_stmt -> IF ID LK single_stmt RK .)
     RK              reduce using rule 36 (if_stmt -> IF ID LK single_stmt RK .)
-    ELSE            shift and go to state 55
+    ELSE            shift and go to state 58
 
 
-state 46
+state 47
 
     (18) operator_term -> operator_term operator . term
     (15) term -> . DIGIT
@@ -688,10 +655,10 @@ state 46
     ID              shift and go to state 28
     SUM             shift and go to state 32
 
-    term                           shift and go to state 56
+    term                           shift and go to state 59
     sum_function                   shift and go to state 31
 
-state 47
+state 48
 
     (21) operator -> MAS .
 
@@ -700,7 +667,7 @@ state 47
     SUM             reduce using rule 21 (operator -> MAS .)
 
 
-state 48
+state 49
 
     (22) operator -> MENOS .
 
@@ -709,7 +676,7 @@ state 48
     SUM             reduce using rule 22 (operator -> MENOS .)
 
 
-state 49
+state 50
 
     (23) operator -> MUL .
 
@@ -718,7 +685,7 @@ state 49
     SUM             reduce using rule 23 (operator -> MUL .)
 
 
-state 50
+state 51
 
     (24) operator -> DIV .
 
@@ -727,14 +694,38 @@ state 50
     SUM             reduce using rule 24 (operator -> DIV .)
 
 
-state 51
+state 52
 
     (20) sum_function -> SUM LP ID . RP
 
-    RP              shift and go to state 57
+    RP              shift and go to state 60
 
 
-state 52
+state 53
+
+    (34) print -> PRINT LP ID RP PC .
+
+    IF              reduce using rule 34 (print -> PRINT LP ID RP PC .)
+    ID              reduce using rule 34 (print -> PRINT LP ID RP PC .)
+    PRINT           reduce using rule 34 (print -> PRINT LP ID RP PC .)
+    INT             reduce using rule 34 (print -> PRINT LP ID RP PC .)
+    MATRIX          reduce using rule 34 (print -> PRINT LP ID RP PC .)
+    RK              reduce using rule 34 (print -> PRINT LP ID RP PC .)
+
+
+state 54
+
+    (35) print -> PRINT LP TEXT RP PC .
+
+    IF              reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+    ID              reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+    PRINT           reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+    INT             reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+    MATRIX          reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+    RK              reduce using rule 35 (print -> PRINT LP TEXT RP PC .)
+
+
+state 55
 
     (14) int_decl -> INT ID IGUAL term PC .
 
@@ -746,38 +737,35 @@ state 52
     RK              reduce using rule 14 (int_decl -> INT ID IGUAL term PC .)
 
 
-state 53
+state 56
 
     (25) matrix_decl -> MATRIX ID IGUAL LC matrix_value . RC PC
 
-    RC              shift and go to state 58
+    RC              shift and go to state 61
 
 
-state 54
+state 57
 
     (26) matrix_value -> DIGIT . possibly_next_matrix_row_value possibly_next_matrix_row
-    (27) possibly_next_matrix_row_value -> . COMA matrix_value possibly_next_matrix_row_value
+    (27) possibly_next_matrix_row_value -> . possibly_next_matrix_row_value COMA matrix_value
     (28) possibly_next_matrix_row_value -> . vacio
     (4) vacio -> .
 
-  ! shift/reduce conflict for COMA resolved as shift
-    COMA            shift and go to state 60
+    COMA            reduce using rule 4 (vacio -> .)
     BV              reduce using rule 4 (vacio -> .)
     RC              reduce using rule 4 (vacio -> .)
 
-  ! COMA            [ reduce using rule 4 (vacio -> .) ]
+    possibly_next_matrix_row_value shift and go to state 62
+    vacio                          shift and go to state 63
 
-    possibly_next_matrix_row_value shift and go to state 59
-    vacio                          shift and go to state 61
-
-state 55
+state 58
 
     (37) if_stmt -> IF ID LK single_stmt RK ELSE . LK single_stmt RK
 
-    LK              shift and go to state 62
+    LK              shift and go to state 64
 
 
-state 56
+state 59
 
     (18) operator_term -> operator_term operator term .
 
@@ -785,16 +773,10 @@ state 56
     MENOS           reduce using rule 18 (operator_term -> operator_term operator term .)
     MUL             reduce using rule 18 (operator_term -> operator_term operator term .)
     DIV             reduce using rule 18 (operator_term -> operator_term operator term .)
-    IF              reduce using rule 18 (operator_term -> operator_term operator term .)
-    ID              reduce using rule 18 (operator_term -> operator_term operator term .)
-    PRINT           reduce using rule 18 (operator_term -> operator_term operator term .)
-    INT             reduce using rule 18 (operator_term -> operator_term operator term .)
-    MATRIX          reduce using rule 18 (operator_term -> operator_term operator term .)
-    RK              reduce using rule 18 (operator_term -> operator_term operator term .)
     PC              reduce using rule 18 (operator_term -> operator_term operator term .)
 
 
-state 57
+state 60
 
     (20) sum_function -> SUM LP ID RP .
 
@@ -802,61 +784,44 @@ state 57
     MENOS           reduce using rule 20 (sum_function -> SUM LP ID RP .)
     MUL             reduce using rule 20 (sum_function -> SUM LP ID RP .)
     DIV             reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    IF              reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    ID              reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    PRINT           reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    INT             reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    MATRIX          reduce using rule 20 (sum_function -> SUM LP ID RP .)
-    RK              reduce using rule 20 (sum_function -> SUM LP ID RP .)
     PC              reduce using rule 20 (sum_function -> SUM LP ID RP .)
 
 
-state 58
+state 61
 
     (25) matrix_decl -> MATRIX ID IGUAL LC matrix_value RC . PC
 
-    PC              shift and go to state 63
-
-
-state 59
-
-    (26) matrix_value -> DIGIT possibly_next_matrix_row_value . possibly_next_matrix_row
-    (29) possibly_next_matrix_row -> . matrix_nextvalue possibly_next_matrix_row
-    (30) possibly_next_matrix_row -> . vacio
-    (31) matrix_nextvalue -> . BV matrix_value
-    (32) matrix_nextvalue -> . vacio
-    (4) vacio -> .
-
-  ! shift/reduce conflict for BV resolved as shift
-    BV              shift and go to state 67
-    RC              reduce using rule 4 (vacio -> .)
-    COMA            reduce using rule 4 (vacio -> .)
-
-  ! BV              [ reduce using rule 4 (vacio -> .) ]
-
-    possibly_next_matrix_row       shift and go to state 64
-    matrix_nextvalue               shift and go to state 65
-    vacio                          shift and go to state 66
-
-state 60
-
-    (27) possibly_next_matrix_row_value -> COMA . matrix_value possibly_next_matrix_row_value
-    (26) matrix_value -> . DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
-
-    DIGIT           shift and go to state 54
-
-    matrix_value                   shift and go to state 68
-
-state 61
-
-    (28) possibly_next_matrix_row_value -> vacio .
-
-    BV              reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
-    RC              reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
-    COMA            reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
+    PC              shift and go to state 65
 
 
 state 62
+
+    (26) matrix_value -> DIGIT possibly_next_matrix_row_value . possibly_next_matrix_row
+    (27) possibly_next_matrix_row_value -> possibly_next_matrix_row_value . COMA matrix_value
+    (29) possibly_next_matrix_row -> . possibly_next_matrix_row matrix_nextvalue
+    (30) possibly_next_matrix_row -> . vacio
+    (4) vacio -> .
+
+  ! shift/reduce conflict for COMA resolved as shift
+    COMA            shift and go to state 67
+    BV              reduce using rule 4 (vacio -> .)
+    RC              reduce using rule 4 (vacio -> .)
+
+  ! COMA            [ reduce using rule 4 (vacio -> .) ]
+
+    possibly_next_matrix_row       shift and go to state 66
+    vacio                          shift and go to state 68
+
+state 63
+
+    (28) possibly_next_matrix_row_value -> vacio .
+
+    COMA            reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
+    BV              reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
+    RC              reduce using rule 28 (possibly_next_matrix_row_value -> vacio .)
+
+
+state 64
 
     (37) if_stmt -> IF ID LK single_stmt RK ELSE LK . single_stmt RK
     (9) single_stmt -> . decl
@@ -864,9 +829,9 @@ state 62
     (11) single_stmt -> . print
     (12) decl -> . int_decl
     (13) decl -> . matrix_decl
-    (33) single_op -> . ID IGUAL term
-    (34) print -> . PRINT LP ID RP
-    (35) print -> . PRINT LP TEXT RP
+    (33) single_op -> . ID IGUAL term PC
+    (34) print -> . PRINT LP ID RP PC
+    (35) print -> . PRINT LP TEXT RP PC
     (14) int_decl -> . INT ID IGUAL term PC
     (25) matrix_decl -> . MATRIX ID IGUAL LC matrix_value RC PC
 
@@ -882,7 +847,7 @@ state 62
     int_decl                       shift and go to state 14
     matrix_decl                    shift and go to state 15
 
-state 63
+state 65
 
     (25) matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC .
 
@@ -894,113 +859,92 @@ state 63
     RK              reduce using rule 25 (matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC .)
 
 
-state 64
+state 66
 
     (26) matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .
-
-    RC              reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .)
-    BV              reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .)
-    COMA            reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .)
-
-
-state 65
-
-    (29) possibly_next_matrix_row -> matrix_nextvalue . possibly_next_matrix_row
-    (29) possibly_next_matrix_row -> . matrix_nextvalue possibly_next_matrix_row
-    (30) possibly_next_matrix_row -> . vacio
+    (29) possibly_next_matrix_row -> possibly_next_matrix_row . matrix_nextvalue
     (31) matrix_nextvalue -> . BV matrix_value
     (32) matrix_nextvalue -> . vacio
     (4) vacio -> .
 
   ! shift/reduce conflict for BV resolved as shift
-    BV              shift and go to state 67
-    RC              reduce using rule 4 (vacio -> .)
+  ! reduce/reduce conflict for COMA resolved using rule 4 (vacio -> .)
+  ! shift/reduce conflict for BV resolved as shift
+  ! reduce/reduce conflict for RC resolved using rule 4 (vacio -> .)
+    BV              shift and go to state 71
     COMA            reduce using rule 4 (vacio -> .)
+    RC              reduce using rule 4 (vacio -> .)
 
+  ! RC              [ reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .) ]
+  ! COMA            [ reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .) ]
+  ! BV              [ reduce using rule 26 (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row .) ]
   ! BV              [ reduce using rule 4 (vacio -> .) ]
 
-    matrix_nextvalue               shift and go to state 65
-    possibly_next_matrix_row       shift and go to state 70
-    vacio                          shift and go to state 66
-
-state 66
-
-    (30) possibly_next_matrix_row -> vacio .
-    (32) matrix_nextvalue -> vacio .
-
-  ! reduce/reduce conflict for BV resolved using rule 30 (possibly_next_matrix_row -> vacio .)
-  ! reduce/reduce conflict for RC resolved using rule 30 (possibly_next_matrix_row -> vacio .)
-  ! reduce/reduce conflict for COMA resolved using rule 30 (possibly_next_matrix_row -> vacio .)
-    BV              reduce using rule 30 (possibly_next_matrix_row -> vacio .)
-    RC              reduce using rule 30 (possibly_next_matrix_row -> vacio .)
-    COMA            reduce using rule 30 (possibly_next_matrix_row -> vacio .)
-
-  ! BV              [ reduce using rule 32 (matrix_nextvalue -> vacio .) ]
-  ! RC              [ reduce using rule 32 (matrix_nextvalue -> vacio .) ]
-  ! COMA            [ reduce using rule 32 (matrix_nextvalue -> vacio .) ]
-
+    matrix_nextvalue               shift and go to state 70
+    vacio                          shift and go to state 72
 
 state 67
 
-    (31) matrix_nextvalue -> BV . matrix_value
+    (27) possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA . matrix_value
     (26) matrix_value -> . DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
 
-    DIGIT           shift and go to state 54
+    DIGIT           shift and go to state 57
 
-    matrix_value                   shift and go to state 71
+    matrix_value                   shift and go to state 73
 
 state 68
 
-    (27) possibly_next_matrix_row_value -> COMA matrix_value . possibly_next_matrix_row_value
-    (27) possibly_next_matrix_row_value -> . COMA matrix_value possibly_next_matrix_row_value
-    (28) possibly_next_matrix_row_value -> . vacio
-    (4) vacio -> .
+    (30) possibly_next_matrix_row -> vacio .
 
-  ! shift/reduce conflict for COMA resolved as shift
-    COMA            shift and go to state 60
-    BV              reduce using rule 4 (vacio -> .)
-    RC              reduce using rule 4 (vacio -> .)
+    COMA            reduce using rule 30 (possibly_next_matrix_row -> vacio .)
+    BV              reduce using rule 30 (possibly_next_matrix_row -> vacio .)
+    RC              reduce using rule 30 (possibly_next_matrix_row -> vacio .)
 
-  ! COMA            [ reduce using rule 4 (vacio -> .) ]
-
-    possibly_next_matrix_row_value shift and go to state 72
-    vacio                          shift and go to state 61
 
 state 69
 
     (37) if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt . RK
 
-    RK              shift and go to state 73
+    RK              shift and go to state 74
 
 
 state 70
 
-    (29) possibly_next_matrix_row -> matrix_nextvalue possibly_next_matrix_row .
+    (29) possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue .
 
-    BV              reduce using rule 29 (possibly_next_matrix_row -> matrix_nextvalue possibly_next_matrix_row .)
-    RC              reduce using rule 29 (possibly_next_matrix_row -> matrix_nextvalue possibly_next_matrix_row .)
-    COMA            reduce using rule 29 (possibly_next_matrix_row -> matrix_nextvalue possibly_next_matrix_row .)
+    COMA            reduce using rule 29 (possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue .)
+    BV              reduce using rule 29 (possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue .)
+    RC              reduce using rule 29 (possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue .)
 
 
 state 71
 
-    (31) matrix_nextvalue -> BV matrix_value .
+    (31) matrix_nextvalue -> BV . matrix_value
+    (26) matrix_value -> . DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
 
-    BV              reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
-    RC              reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
-    COMA            reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
+    DIGIT           shift and go to state 57
 
+    matrix_value                   shift and go to state 75
 
 state 72
 
-    (27) possibly_next_matrix_row_value -> COMA matrix_value possibly_next_matrix_row_value .
+    (32) matrix_nextvalue -> vacio .
 
-    BV              reduce using rule 27 (possibly_next_matrix_row_value -> COMA matrix_value possibly_next_matrix_row_value .)
-    RC              reduce using rule 27 (possibly_next_matrix_row_value -> COMA matrix_value possibly_next_matrix_row_value .)
-    COMA            reduce using rule 27 (possibly_next_matrix_row_value -> COMA matrix_value possibly_next_matrix_row_value .)
+    COMA            reduce using rule 32 (matrix_nextvalue -> vacio .)
+    BV              reduce using rule 32 (matrix_nextvalue -> vacio .)
+    RC              reduce using rule 32 (matrix_nextvalue -> vacio .)
 
 
 state 73
+
+    (27) possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value .
+
+    COMA            reduce using rule 27 (possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value .)
+    BV              reduce using rule 27 (possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value .)
+    RC              reduce using rule 27 (possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value .)
+
+
+state 74
 
     (37) if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK .
 
@@ -1011,17 +955,25 @@ state 73
     MATRIX          reduce using rule 37 (if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK .)
     RK              reduce using rule 37 (if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK .)
 
+
+state 75
+
+    (31) matrix_nextvalue -> BV matrix_value .
+
+    COMA            reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
+    BV              reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
+    RC              reduce using rule 31 (matrix_nextvalue -> BV matrix_value .)
+
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for MAS in state 38 resolved as shift
-WARNING: shift/reduce conflict for MENOS in state 38 resolved as shift
-WARNING: shift/reduce conflict for MUL in state 38 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 38 resolved as shift
-WARNING: shift/reduce conflict for COMA in state 54 resolved as shift
-WARNING: shift/reduce conflict for BV in state 59 resolved as shift
-WARNING: shift/reduce conflict for BV in state 65 resolved as shift
-WARNING: shift/reduce conflict for COMA in state 68 resolved as shift
-WARNING: reduce/reduce conflict in state 66 resolved using rule (possibly_next_matrix_row -> vacio)
-WARNING: rejected rule (matrix_nextvalue -> vacio) in state 66
-WARNING: Rule (matrix_nextvalue -> vacio) is never reduced
+WARNING: shift/reduce conflict for MAS in state 39 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 39 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 39 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 39 resolved as shift
+WARNING: shift/reduce conflict for COMA in state 62 resolved as shift
+WARNING: shift/reduce conflict for BV in state 66 resolved as shift
+WARNING: shift/reduce conflict for BV in state 66 resolved as shift
+WARNING: reduce/reduce conflict in state 66 resolved using rule (vacio -> <empty>)
+WARNING: rejected rule (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row) in state 66
+WARNING: Rule (matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row) is never reduced

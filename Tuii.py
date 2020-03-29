@@ -241,7 +241,7 @@ def p_matrix_value(p):
 
 def p_possibly_next_matrix_row_value(p):
     '''
-    possibly_next_matrix_row_value : COMA matrix_value possibly_next_matrix_row_value
+    possibly_next_matrix_row_value : possibly_next_matrix_row_value COMA matrix_value
                                    | vacio
     '''
     if len(p) == 2:
@@ -252,7 +252,7 @@ def p_possibly_next_matrix_row_value(p):
 
 def p_possibly_next_matrix_row(p):
     '''
-    possibly_next_matrix_row : matrix_nextvalue possibly_next_matrix_row
+    possibly_next_matrix_row : possibly_next_matrix_row matrix_nextvalue
                              | vacio
     '''
     if len(p) == 2:
@@ -273,21 +273,21 @@ def p_matrix_nextvalue(p):
         p[0] = (p[1], p[2])
 
 
-#single_op -> ID IGUAL term
+#single_op -> ID IGUAL term PC
 def p_single_op(p):
     '''
-    single_op : ID IGUAL term
+    single_op : ID IGUAL term PC
     '''
-    p[0] = (p[2], p[1], p[3])
+    p[0] = (p[2], p[1], p[3], p[4])
 
 
-#print -> PRINT LP (ID | TEXT) RP
+#print -> PRINT LP (ID | TEXT) RP PC
 def p_print(p):
     '''
-    print : PRINT LP ID RP
-          | PRINT LP TEXT RP
+    print : PRINT LP ID RP PC
+          | PRINT LP TEXT RP PC
     '''
-    p[0] = p[1]
+    p[0] = (p[1], p[2], p[3], p[4], p[5])
 
 
 #if_stmt -> IF ID LK single_stmt RK [ELSE LK single_stmt RK
