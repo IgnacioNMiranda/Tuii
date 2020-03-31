@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'BV COMA COMILLA DIGIT DIV ELSE ID IF IGUAL INT LC LK LP MAIN MAS MATRIX MENOS MUL PC PRINT RC RK RP SUM TEXT\n    ini : main\n        | vacio\n    \n    main : MAIN LK sentence RK\n    \n    vacio :\n    \n    sentence : single_stmt\n            | if_stmt\n            | single_stmt sentence\n            | if_stmt sentence\n    \n    single_stmt : decl\n                | single_op\n                | print\n    \n    decl : int_decl\n        | matrix_decl\n    \n      int_decl : INT ID IGUAL term PC\n    \n    term : DIGIT\n        | ID\n        | sum_function operator_term\n    \n    operator_term : operator_term operator term\n                  | vacio\n    \n    sum_function : SUM LP ID RP\n    \n    operator : MAS\n            | MENOS\n            | MUL\n            | DIV\n    \n    matrix_decl : MATRIX ID IGUAL LC matrix_value RC PC\n    \n    matrix_value : DIGIT possibly_next_matrix_row_value possibly_next_matrix_row\n    \n    possibly_next_matrix_row_value : possibly_next_matrix_row_value COMA matrix_value\n                                   | vacio\n    \n    possibly_next_matrix_row : possibly_next_matrix_row matrix_nextvalue\n                             | vacio\n    \n    matrix_nextvalue : BV matrix_value\n                     | vacio\n    \n    single_op : ID IGUAL term PC\n    \n    print : PRINT LP ID RP PC\n          | PRINT LP TEXT RP PC\n    \n    if_stmt : IF ID LK single_stmt RK\n            | IF ID LK single_stmt RK ELSE LK single_stmt RK\n    '
+_lr_signature = 'leftIGUALleftMASMENOSleftMULDIVCOMA DIGIT DIV ELSE ID IF IGUAL INT LK LP MAIN MAS MENOS MUL PC PRINT RK RP SUM TEXT\n    ini : main\n        | vacio\n    \n    main : MAIN LK sentence RK\n    \n    vacio :\n    \n    sentence : single_stmt\n            | if_stmt\n            | single_stmt sentence\n            | if_stmt sentence\n    \n    single_stmt : int_decl\n                | single_op\n                | print\n    \n      int_decl : INT ID IGUAL term PC\n    \n    term : DIGIT\n        | ID\n        | sum_function operator_term\n    \n    operator_term : operator_term operator term\n                  | vacio\n    \n    sum_function : SUM LP ID RP\n    \n    operator : MAS\n            | MENOS\n            | MUL\n            | DIV\n    \n    single_op : ID IGUAL term PC\n    \n    print : PRINT LP ID RP PC\n          | PRINT LP TEXT RP PC\n    \n    if_stmt : IF ID LK single_stmt RK\n            | IF ID LK single_stmt RK ELSE LK single_stmt RK\n    '
     
-_lr_action_items = {'MAIN':([0,],[4,]),'$end':([0,1,2,3,19,],[-4,0,-1,-2,-3,]),'LK':([4,22,58,],[5,27,64,]),'IF':([5,7,8,9,10,11,14,15,38,46,53,54,55,65,74,],[12,12,12,-9,-10,-11,-12,-13,-33,-36,-34,-35,-14,-25,-37,]),'ID':([5,7,8,9,10,11,12,14,15,17,18,23,24,27,35,38,41,46,47,48,49,50,51,53,54,55,64,65,74,],[13,13,13,-9,-10,-11,22,-12,-13,25,26,28,33,13,28,-33,52,-36,28,-21,-22,-23,-24,-34,-35,-14,13,-25,-37,]),'PRINT':([5,7,8,9,10,11,14,15,27,38,46,53,54,55,64,65,74,],[16,16,16,-9,-10,-11,-12,-13,16,-33,-36,-34,-35,-14,16,-25,-37,]),'INT':([5,7,8,9,10,11,14,15,27,38,46,53,54,55,64,65,74,],[17,17,17,-9,-10,-11,-12,-13,17,-33,-36,-34,-35,-14,17,-25,-37,]),'MATRIX':([5,7,8,9,10,11,14,15,27,38,46,53,54,55,64,65,74,],[18,18,18,-9,-10,-11,-12,-13,18,-33,-36,-34,-35,-14,18,-25,-37,]),'RK':([6,7,8,9,10,11,14,15,20,21,37,38,46,53,54,55,65,69,74,],[19,-5,-6,-9,-10,-11,-12,-13,-7,-8,46,-33,-36,-34,-35,-14,-25,74,-37,]),'IGUAL':([13,25,26,],[23,35,36,]),'LP':([16,32,],[24,41,]),'DIGIT':([23,35,45,47,48,49,50,51,67,71,],[30,30,57,30,-21,-22,-23,-24,57,57,]),'SUM':([23,35,47,48,49,50,51,],[32,32,32,-21,-22,-23,-24,]),'TEXT':([24,],[34,]),'PC':([28,29,30,31,39,40,42,43,44,59,60,61,],[-16,38,-15,-4,-17,-19,53,54,55,-18,-20,65,]),'MAS':([28,30,31,39,40,59,60,],[-16,-15,-4,48,-19,-18,-20,]),'MENOS':([28,30,31,39,40,59,60,],[-16,-15,-4,49,-19,-18,-20,]),'MUL':([28,30,31,39,40,59,60,],[-16,-15,-4,50,-19,-18,-20,]),'DIV':([28,30,31,39,40,59,60,],[-16,-15,-4,51,-19,-18,-20,]),'RP':([33,34,52,],[42,43,60,]),'LC':([36,],[45,]),'ELSE':([46,],[58,]),'RC':([56,57,62,63,66,68,70,72,73,75,],[61,-4,-4,-28,-4,-30,-29,-32,-27,-31,]),'COMA':([57,62,63,66,68,70,72,73,75,],[-4,67,-28,-4,-30,-29,-32,-27,-31,]),'BV':([57,62,63,66,68,70,72,73,75,],[-4,-4,-28,71,-30,-29,-32,-27,-31,]),}
+_lr_action_items = {'MAIN':([0,],[4,]),'$end':([0,1,2,3,16,],[-4,0,-1,-2,-3,]),'LK':([4,19,50,],[5,23,53,]),'IF':([5,7,8,9,10,11,33,40,47,48,49,55,],[12,12,12,-9,-10,-11,-23,-26,-12,-24,-25,-27,]),'INT':([5,7,8,9,10,11,23,33,40,47,48,49,53,55,],[14,14,14,-9,-10,-11,14,-23,-26,-12,-24,-25,14,-27,]),'ID':([5,7,8,9,10,11,12,14,20,22,23,29,33,36,40,41,42,43,44,45,47,48,49,53,55,],[13,13,13,-9,-10,-11,19,21,24,30,13,24,-23,46,-26,24,-19,-20,-21,-22,-12,-24,-25,13,-27,]),'PRINT':([5,7,8,9,10,11,23,33,40,47,48,49,53,55,],[15,15,15,-9,-10,-11,15,-23,-26,-12,-24,-25,15,-27,]),'RK':([6,7,8,9,10,11,17,18,32,33,40,47,48,49,54,55,],[16,-5,-6,-9,-10,-11,-7,-8,40,-23,-26,-12,-24,-25,55,-27,]),'IGUAL':([13,21,],[20,29,]),'LP':([15,28,],[22,36,]),'DIGIT':([20,29,41,42,43,44,45,],[26,26,26,-19,-20,-21,-22,]),'SUM':([20,29,41,42,43,44,45,],[28,28,28,-19,-20,-21,-22,]),'TEXT':([22,],[31,]),'PC':([24,25,26,27,34,35,37,38,39,51,52,],[-14,33,-13,-4,-15,-17,47,48,49,-16,-18,]),'MAS':([24,26,27,34,35,51,52,],[-14,-13,-4,42,-17,-16,-18,]),'MENOS':([24,26,27,34,35,51,52,],[-14,-13,-4,43,-17,-16,-18,]),'MUL':([24,26,27,34,35,51,52,],[-14,-13,-4,44,-17,-16,-18,]),'DIV':([24,26,27,34,35,51,52,],[-14,-13,-4,45,-17,-16,-18,]),'RP':([30,31,46,],[38,39,52,]),'ELSE':([40,],[50,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'ini':([0,],[1,]),'main':([0,],[2,]),'vacio':([0,31,57,62,66,],[3,40,63,68,72,]),'sentence':([5,7,8,],[6,20,21,]),'single_stmt':([5,7,8,27,64,],[7,7,7,37,69,]),'if_stmt':([5,7,8,],[8,8,8,]),'decl':([5,7,8,27,64,],[9,9,9,9,9,]),'single_op':([5,7,8,27,64,],[10,10,10,10,10,]),'print':([5,7,8,27,64,],[11,11,11,11,11,]),'int_decl':([5,7,8,27,64,],[14,14,14,14,14,]),'matrix_decl':([5,7,8,27,64,],[15,15,15,15,15,]),'term':([23,35,47,],[29,44,59,]),'sum_function':([23,35,47,],[31,31,31,]),'operator_term':([31,],[39,]),'operator':([39,],[47,]),'matrix_value':([45,67,71,],[56,73,75,]),'possibly_next_matrix_row_value':([57,],[62,]),'possibly_next_matrix_row':([62,],[66,]),'matrix_nextvalue':([66,],[70,]),}
+_lr_goto_items = {'ini':([0,],[1,]),'main':([0,],[2,]),'vacio':([0,27,],[3,35,]),'sentence':([5,7,8,],[6,17,18,]),'single_stmt':([5,7,8,23,53,],[7,7,7,32,54,]),'if_stmt':([5,7,8,],[8,8,8,]),'int_decl':([5,7,8,23,53,],[9,9,9,9,9,]),'single_op':([5,7,8,23,53,],[10,10,10,10,10,]),'print':([5,7,8,23,53,],[11,11,11,11,11,]),'term':([20,29,41,],[25,37,51,]),'sum_function':([20,29,41,],[27,27,27,]),'operator_term':([27,],[34,]),'operator':([34,],[41,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,41 +27,31 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> ini","S'",1,None,None,None),
-  ('ini -> main','ini',1,'p_ini','Tuii.py',121),
-  ('ini -> vacio','ini',1,'p_ini','Tuii.py',122),
-  ('main -> MAIN LK sentence RK','main',4,'p_main','Tuii.py',130),
-  ('vacio -> <empty>','vacio',0,'p_vacio','Tuii.py',137),
-  ('sentence -> single_stmt','sentence',1,'p_sentence','Tuii.py',145),
-  ('sentence -> if_stmt','sentence',1,'p_sentence','Tuii.py',146),
-  ('sentence -> single_stmt sentence','sentence',2,'p_sentence','Tuii.py',147),
-  ('sentence -> if_stmt sentence','sentence',2,'p_sentence','Tuii.py',148),
-  ('single_stmt -> decl','single_stmt',1,'p_single_stmt','Tuii.py',159),
-  ('single_stmt -> single_op','single_stmt',1,'p_single_stmt','Tuii.py',160),
-  ('single_stmt -> print','single_stmt',1,'p_single_stmt','Tuii.py',161),
-  ('decl -> int_decl','decl',1,'p_decl','Tuii.py',169),
-  ('decl -> matrix_decl','decl',1,'p_decl','Tuii.py',170),
-  ('int_decl -> INT ID IGUAL term PC','int_decl',5,'p_int_decl','Tuii.py',178),
-  ('term -> DIGIT','term',1,'p_term','Tuii.py',186),
-  ('term -> ID','term',1,'p_term','Tuii.py',187),
-  ('term -> sum_function operator_term','term',2,'p_term','Tuii.py',188),
-  ('operator_term -> operator_term operator term','operator_term',3,'p_operator_term','Tuii.py',198),
-  ('operator_term -> vacio','operator_term',1,'p_operator_term','Tuii.py',199),
-  ('sum_function -> SUM LP ID RP','sum_function',4,'p_sum_function','Tuii.py',210),
-  ('operator -> MAS','operator',1,'p_operator','Tuii.py',218),
-  ('operator -> MENOS','operator',1,'p_operator','Tuii.py',219),
-  ('operator -> MUL','operator',1,'p_operator','Tuii.py',220),
-  ('operator -> DIV','operator',1,'p_operator','Tuii.py',221),
-  ('matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC','matrix_decl',7,'p_matrix_decl','Tuii.py',229),
-  ('matrix_value -> DIGIT possibly_next_matrix_row_value possibly_next_matrix_row','matrix_value',3,'p_matrix_value','Tuii.py',237),
-  ('possibly_next_matrix_row_value -> possibly_next_matrix_row_value COMA matrix_value','possibly_next_matrix_row_value',3,'p_possibly_next_matrix_row_value','Tuii.py',244),
-  ('possibly_next_matrix_row_value -> vacio','possibly_next_matrix_row_value',1,'p_possibly_next_matrix_row_value','Tuii.py',245),
-  ('possibly_next_matrix_row -> possibly_next_matrix_row matrix_nextvalue','possibly_next_matrix_row',2,'p_possibly_next_matrix_row','Tuii.py',255),
-  ('possibly_next_matrix_row -> vacio','possibly_next_matrix_row',1,'p_possibly_next_matrix_row','Tuii.py',256),
-  ('matrix_nextvalue -> BV matrix_value','matrix_nextvalue',2,'p_matrix_nextvalue','Tuii.py',267),
-  ('matrix_nextvalue -> vacio','matrix_nextvalue',1,'p_matrix_nextvalue','Tuii.py',268),
-  ('single_op -> ID IGUAL term PC','single_op',4,'p_single_op','Tuii.py',279),
-  ('print -> PRINT LP ID RP PC','print',5,'p_print','Tuii.py',287),
-  ('print -> PRINT LP TEXT RP PC','print',5,'p_print','Tuii.py',288),
-  ('if_stmt -> IF ID LK single_stmt RK','if_stmt',5,'p_if_stmt','Tuii.py',296),
-  ('if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK','if_stmt',9,'p_if_stmt','Tuii.py',297),
+  ('ini -> main','ini',1,'p_ini','Tuii.py',117),
+  ('ini -> vacio','ini',1,'p_ini','Tuii.py',118),
+  ('main -> MAIN LK sentence RK','main',4,'p_main','Tuii.py',126),
+  ('vacio -> <empty>','vacio',0,'p_vacio','Tuii.py',133),
+  ('sentence -> single_stmt','sentence',1,'p_sentence','Tuii.py',141),
+  ('sentence -> if_stmt','sentence',1,'p_sentence','Tuii.py',142),
+  ('sentence -> single_stmt sentence','sentence',2,'p_sentence','Tuii.py',143),
+  ('sentence -> if_stmt sentence','sentence',2,'p_sentence','Tuii.py',144),
+  ('single_stmt -> int_decl','single_stmt',1,'p_single_stmt','Tuii.py',155),
+  ('single_stmt -> single_op','single_stmt',1,'p_single_stmt','Tuii.py',156),
+  ('single_stmt -> print','single_stmt',1,'p_single_stmt','Tuii.py',157),
+  ('int_decl -> INT ID IGUAL term PC','int_decl',5,'p_int_decl','Tuii.py',165),
+  ('term -> DIGIT','term',1,'p_term','Tuii.py',173),
+  ('term -> ID','term',1,'p_term','Tuii.py',174),
+  ('term -> sum_function operator_term','term',2,'p_term','Tuii.py',175),
+  ('operator_term -> operator_term operator term','operator_term',3,'p_operator_term','Tuii.py',185),
+  ('operator_term -> vacio','operator_term',1,'p_operator_term','Tuii.py',186),
+  ('sum_function -> SUM LP ID RP','sum_function',4,'p_sum_function','Tuii.py',197),
+  ('operator -> MAS','operator',1,'p_operator','Tuii.py',205),
+  ('operator -> MENOS','operator',1,'p_operator','Tuii.py',206),
+  ('operator -> MUL','operator',1,'p_operator','Tuii.py',207),
+  ('operator -> DIV','operator',1,'p_operator','Tuii.py',208),
+  ('single_op -> ID IGUAL term PC','single_op',4,'p_single_op','Tuii.py',216),
+  ('print -> PRINT LP ID RP PC','print',5,'p_print','Tuii.py',224),
+  ('print -> PRINT LP TEXT RP PC','print',5,'p_print','Tuii.py',225),
+  ('if_stmt -> IF ID LK single_stmt RK','if_stmt',5,'p_if_stmt','Tuii.py',233),
+  ('if_stmt -> IF ID LK single_stmt RK ELSE LK single_stmt RK','if_stmt',9,'p_if_stmt','Tuii.py',234),
 ]

@@ -11,7 +11,6 @@ reserved = {
     'sum': 'SUM',
     'main': 'MAIN',
     'int': 'INT',
-    'matrix': 'MATRIX'
 }
 
 
@@ -20,14 +19,10 @@ tokens = [
     'ID',
     'LP',
     'RP',
-    'LC',
-    'RC',
     'LK',
     'RK',
     'PC',
     'COMA',
-    'COMILLA',
-    'BV',
     'MAS',
     'MENOS',
     'MUL',
@@ -41,8 +36,6 @@ tokens = [
 #Tokens paréntesis
 t_LP = r'\('
 t_RP = r'\)'
-t_LC = r'\['
-t_RC = r'\]'
 t_LK = r'\{'
 t_RK = r'\}'
 
@@ -50,8 +43,6 @@ t_RK = r'\}'
 #Tokens símbolos
 t_PC = r'\;'
 t_COMA = r'\,'
-t_COMILLA = r'\''
-t_BV = r'\|'
 
 
 #Tokens operadores
@@ -95,7 +86,6 @@ def t_error(t):
 # Validación de espacios en blanco#
 t_ignore = ' \t'
 
-
 #Saltos de línea
 def t_newline(t):
     r'\n+'
@@ -107,13 +97,19 @@ lexer = lex.lex()
 with open('archivo', 'r') as f:
     contents = f.read()
     lex.input(contents)
-    print("Structure: LexToken(type,value,lineno,lexpos)\n")
+    print("Análisis Léxico\n\nStructure: LexToken(type,value,lineno,lexpos)")
     for tok in lexer:
         print(tok)
 
 
 
 #Reglas de Sintaxis
+
+precedence = (
+    ('left', 'IGUAL'),
+     ('left', 'MAS', 'MENOS'),
+     ('left', 'MUL', 'DIV'),
+)
 
 # ini → main | vacio
 def p_ini(p):
@@ -153,21 +149,12 @@ def p_sentence(p):
         p[0] = (p[1], p[2])
 
 
-# single_stmt → decl | single_op | print
+# single_stmt → int_decl | single_op | print
 def p_single_stmt(p):
     '''
-    single_stmt : decl
+    single_stmt : int_decl
                 | single_op
                 | print
-    '''
-    p[0] = p[1]
-
-
-# decl → int_decl | matrix_decl
-def p_decl(p):
-    '''
-    decl : int_decl
-        | matrix_decl
     '''
     p[0] = p[1]
 
@@ -223,56 +210,6 @@ def p_operator(p):
     p[0] = p[1]
 
 
-#matrix_decl -> MATRIX ID IGUAL LC matrix_value RC PC
-def p_matrix_decl(p):
-    '''
-    matrix_decl : MATRIX ID IGUAL LC matrix_value RC PC
-    '''
-    p[0] = (p[1], p[2], p[3], p[4], p[5],p[6], p[7])
-
-
-#matrix_value ->  DIGIT [(COMA matrix_value)] [matrix_nextvalue]
-def p_matrix_value(p):
-    '''
-    matrix_value : DIGIT possibly_next_matrix_row_value possibly_next_matrix_row
-    '''
-    p[0] = (p[1], p[2], p[3])
-
-
-def p_possibly_next_matrix_row_value(p):
-    '''
-    possibly_next_matrix_row_value : possibly_next_matrix_row_value COMA matrix_value
-                                   | vacio
-    '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2], p[3])
-
-
-def p_possibly_next_matrix_row(p):
-    '''
-    possibly_next_matrix_row : possibly_next_matrix_row matrix_nextvalue
-                             | vacio
-    '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2])
-
-
-#matrix_nextvalue -> BV matrix_value
-def p_matrix_nextvalue(p):
-    '''
-    matrix_nextvalue : BV matrix_value
-                     | vacio
-    '''
-    if len(p) == 0:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2])
-
-
 #single_op -> ID IGUAL term PC
 def p_single_op(p):
     '''
@@ -310,9 +247,10 @@ def p_error(p):
 #Construcción del analizador sintáctico
 parser = yacc.yacc()
 
-while True:
-    try:
-        s = input('>> ')
-    except EOFError:
-        break
-    parser.parse(s)
+with open('archivo', 'r') as f:
+    print("Análisis Sintáctico")
+    for line in f:
+        try:
+            yacc.parse(line)
+        except EOFError:
+            break
