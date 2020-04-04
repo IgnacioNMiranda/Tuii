@@ -1,11 +1,1 @@
-main {
-    int x = -5;
-    int y = 6;
-    #comentario#
-    if x {
-        print("hola");
-    }else{
-        print("adios");
-    }
-    print(sum(x));
-}
+main { int x = 5 + 2; }

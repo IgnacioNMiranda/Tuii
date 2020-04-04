@@ -84,11 +84,12 @@ def t_error(t):
 
 
 # Validación de espacios en blanco#
-t_ignore = ' \t'
+t_ignore = " \t\n"
 
 #Saltos de línea
 def t_newline(t):
     r'\n+'
+    print("Newline")
     t.lexer.lineno += len(t.value)
 
 
@@ -117,7 +118,7 @@ def p_ini(p):
     ini : main
         | vacio
     '''
-    print(p[1])
+    print(run(p[1]))
 
 
 # main → MAIN LK sentence RK
@@ -125,7 +126,7 @@ def p_main(p):
     '''
     main : MAIN LK sentence RK
     '''
-    p[0] = (p[1], p[2], p[3], p[4])
+    p[0] = (p[3])
 
 
 def p_vacio(p):
@@ -135,7 +136,7 @@ def p_vacio(p):
     p[0] = None
 
 
-# sentence → single_stmt | if_stmt6 | single_stmt sentence | if_stmt sentence
+# sentence → single_stmt | if_stmt | single_stmt sentence | if_stmt sentence
 def p_sentence(p):
     '''
     sentence : single_stmt
@@ -164,20 +165,17 @@ def p_int_decl(p):
     '''
       int_decl : INT ID IGUAL term PC
     '''
-    p[0] = ('=', p[1], p[2], p[4], p[5])
+    p[0] = ('=', p[2], p[4])
 
 
 # term → DIGIT | ID | sum_function [operator term]
 def p_term(p):
     '''
-    term : DIGIT
-        | ID
+    term : DIGIT operator_term
+        | ID operator_term
         | sum_function operator_term
     '''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2])
+    p[0] = (p[2], p[1])
 
 
 def p_operator_term(p):
@@ -196,7 +194,7 @@ def p_sum_function(p):
     '''
     sum_function : SUM LP ID RP
     '''
-    p[0] = (p[1], p[2], p[3], p[4])
+    p[0] = ('sum', p[3])
 
 
 #operator -> MAS | MENOS | MUL | DIV
@@ -215,7 +213,7 @@ def p_single_op(p):
     '''
     single_op : ID IGUAL term PC
     '''
-    p[0] = (p[2], p[1], p[3], p[4])
+    p[0] = ('=', p[1], p[3])
 
 
 #print -> PRINT LP (ID | TEXT) RP PC
@@ -224,7 +222,7 @@ def p_print(p):
     print : PRINT LP ID RP PC
           | PRINT LP TEXT RP PC
     '''
-    p[0] = (p[1], p[2], p[3], p[4], p[5])
+    p[0] = ('print', p[3])
 
 
 #if_stmt -> IF ID LK single_stmt RK [ELSE LK single_stmt RK
@@ -234,21 +232,45 @@ def p_if_stmt(p):
             | IF ID LK single_stmt RK ELSE LK single_stmt RK
     '''
     if len(p) == 6:
-        p[0] = (p[1], p[2], p[3], p[4], p[5])
+        p[0] = ('if', p[2], p[4])
     else:
-        p[0] = (p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
+        p[0] = ('if', p[2], p[4],'else', p[8])
 
 
 def p_error(p):
-    print("Error de sintaxis!!!")
+    if not p:
+        print("Error de Sintaxis")
 #
+
+
+#Ambiente
+env = {}
+
+
+def run(p):
+    if type(p) == tuple:
+        if p[0] == "+":
+            return run(p[1]) + run(p[2])
+        elif p[0] == "-":
+            return run(p[1]) - run(p[2])
+        elif p[0] == "*":
+            return run(p[1]) * run(p[2])
+        elif p[0] == "/":
+            return run(p[1]) / run(p[2])
+        elif p[0] == "=":
+            env[p[1]] = run(p[2])
+            print(env)
+        elif p[0] == "sum" or p[0] == "print":
+            print(p[1])
+    else: #Reconoce un numero y lo retorna
+        return p
 
 
 #Construcción del analizador sintáctico
 parser = yacc.yacc()
 
 with open('archivo', 'r') as f:
-    print("Análisis Sintáctico")
+    print("\n\nAnálisis Sintáctico")
     for line in f:
         try:
             yacc.parse(line)
