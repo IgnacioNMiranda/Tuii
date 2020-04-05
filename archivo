@@ -1,1 +1,1 @@
-main { int x = -1; int y = x; y = 2; x=y;if(y){ print("Y es mayor que 0"); } else { print("Y es menor o igual a 0"); }}
+main { int x = -1*2 + 4*5; int y = x; if(y){ print("Y es mayor que 0"); } else { print("Y es menor o igual a 0"); }}

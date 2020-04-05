@@ -116,6 +116,7 @@ def p_ini(p):
     ini : main
         | vacio
     '''
+    print(p[1])
     print(run(p[1]))
 
 
@@ -171,12 +172,24 @@ def p_int_decl(p):
 # term → [term operator] (DIGIT | ID | sum_function)
 def p_term(p):
     '''
-    term : term operator DIGIT
-         | DIGIT
-         | term operator id
-         | id
-         | term operator sum_function
-         | sum_function
+    term : term operator_plus_minus term_2
+         | term_2
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[2], p[1], p[3])
+
+
+def p_term_2(p):
+    '''
+    term_2 : term_2 operator_mul_div DIGIT
+            | term_2 operator_mul_div id
+            | term_2 operator_mul_div sum_function
+            | DIGIT
+            | id
+            | sum_function
+            | term
     '''
     if len(p) == 2:
         p[0] = p[1]
@@ -193,12 +206,18 @@ def p_sum_function(p):
 
 
 # operator → MAS | MENOS | MUL | DIV
-def p_operator(p):
+def p_operator_plus_minus(p):
     '''
-    operator : MAS
-            | MENOS
-            | MUL
-            | DIV
+    operator_plus_minus : MAS
+                        | MENOS
+    '''
+    p[0] = p[1]
+
+
+def p_operator_mul_div(p):
+    '''
+    operator_mul_div : MUL
+                     | DIV
     '''
     p[0] = p[1]
 
@@ -245,7 +264,7 @@ def p_error(p):
 #
 
 
-#Ambiente
+# Ambiente
 env = {}
 
 
