@@ -84,7 +84,7 @@ def t_error(t):
 
 
 # Validación de espacios en blanco#
-t_ignore = " \t\n"
+t_ignore = " \t"
 
 # Saltos de línea
 def t_newline(t):
@@ -206,7 +206,7 @@ def p_operator(p):
 # single_op → ID IGUAL term PC
 def p_single_op(p):
     '''
-    single_op : id IGUAL term PC
+    single_op : ID IGUAL term PC
     '''
     p[0] = ('=', p[1], p[3])
 
@@ -273,13 +273,13 @@ def run(p):
             print(env[p[1]])
         elif p[0] == "print":
             try:
-                print(env[p[1]])
+                print(env[p[1]])  # En caso de ser una variable, imprime su valor
             except KeyError:
-                print(p[1][1:-1])
+                print(p[1][1:-1])  # En caso de ser un string, lo imprime sin las comillas
         elif p[0] == "sentence":
             run(p[1])
             run(p[2])
-    else: # Reconoce un numero y lo retorna
+    else:  # Reconoce un numero y lo retorna
         return p
 
 
