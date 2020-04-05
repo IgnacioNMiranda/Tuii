@@ -14,7 +14,7 @@ reserved = {
 }
 
 
-#Tokens
+# Tokens
 tokens = [
     'ID',
     'LP',
@@ -29,23 +29,23 @@ tokens = [
     'DIV',
     'IGUAL',
     'DIGIT',
-    'TEXT'
+    'TEXT',
 ] + list(reserved.values())
 
 
-#Tokens paréntesis
+# Tokens paréntesis
 t_LP = r'\('
 t_RP = r'\)'
 t_LK = r'\{'
 t_RK = r'\}'
 
 
-#Tokens símbolos
+# Tokens símbolos
 t_PC = r'\;'
 t_COMA = r'\,'
 
 
-#Tokens operadores
+# Tokens operadores
 t_MAS = r'\+'
 t_MENOS = r'\-'
 t_MUL = r'\*'
@@ -66,7 +66,7 @@ def t_DIGIT(t):
 
 
 def t_TEXT(t):
-    r'"[A-Za-z0-9]+"'
+    r'"[A-Za-z0-9: ]+"'
     t.type = reserved.get(t.value, 'TEXT')
     return t
 
@@ -86,14 +86,14 @@ def t_error(t):
 # Validación de espacios en blanco#
 t_ignore = " \t\n"
 
-#Saltos de línea
+# Saltos de línea
 def t_newline(t):
     r'\n+'
     print("Newline")
     t.lexer.lineno += len(t.value)
 
 
-#Ejecución del lexer
+# Ejecución del lexer
 lexer = lex.lex()
 with open('archivo', 'r') as f:
     contents = f.read()
@@ -103,13 +103,11 @@ with open('archivo', 'r') as f:
         print(tok)
 
 
-
-#Reglas de Sintaxis
-
+# Reglas de Sintaxis
 precedence = (
     ('left', 'IGUAL'),
-     ('left', 'MAS', 'MENOS'),
-     ('left', 'MUL', 'DIV'),
+    ('left', 'MAS', 'MENOS'),
+    ('left', 'MUL', 'DIV'),
 )
 
 # ini → main | vacio
@@ -125,8 +123,9 @@ def p_ini(p):
 def p_main(p):
     '''
     main : MAIN LK sentence RK
+         | MAIN LK vacio RK
     '''
-    p[0] = (p[3])
+    p[0] = p[3]
 
 
 def p_vacio(p):
@@ -141,20 +140,21 @@ def p_sentence(p):
     '''
     sentence : single_stmt
             | if_stmt
-            | single_stmt sentence
-            | if_stmt sentence
+            | sentence single_stmt
+            | sentence if_stmt
     '''
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = (p[1], p[2])
+        p[0] = ('sentence', p[1], p[2])
 
 
-# single_stmt → int_decl | single_op | print
+# single_stmt → int_decl | single_op | print | sum_function
 def p_single_stmt(p):
     '''
     single_stmt : int_decl
                 | single_op
+                | sum_function
                 | print
     '''
     p[0] = p[1]
@@ -168,36 +168,31 @@ def p_int_decl(p):
     p[0] = ('=', p[2], p[4])
 
 
-# term → DIGIT | ID | sum_function [operator term]
+# term → [term operator] (DIGIT | ID | sum_function)
 def p_term(p):
     '''
-    term : DIGIT operator_term
-        | ID operator_term
-        | sum_function operator_term
-    '''
-    p[0] = (p[2], p[1])
-
-
-def p_operator_term(p):
-    '''
-    operator_term : operator_term operator term
-                  | vacio
+    term : term operator DIGIT
+         | DIGIT
+         | term operator ID
+         | ID
+         | term operator sum_function
+         | sum_function
     '''
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = (p[1], p[2], p[3])
+        p[0] = (p[2], p[1], p[3])
 
 
-# sum_function → SUM LP ID RP
+# sum_function → SUM LP ID RP PC
 def p_sum_function(p):
     '''
-    sum_function : SUM LP ID RP
+    sum_function : SUM LP ID RP PC
     '''
     p[0] = ('sum', p[3])
 
 
-#operator -> MAS | MENOS | MUL | DIV
+# operator → MAS | MENOS | MUL | DIV
 def p_operator(p):
     '''
     operator : MAS
@@ -208,7 +203,7 @@ def p_operator(p):
     p[0] = p[1]
 
 
-#single_op -> ID IGUAL term PC
+# single_op → ID IGUAL term PC
 def p_single_op(p):
     '''
     single_op : ID IGUAL term PC
@@ -216,7 +211,7 @@ def p_single_op(p):
     p[0] = ('=', p[1], p[3])
 
 
-#print -> PRINT LP (ID | TEXT) RP PC
+# print → PRINT LP (ID | TEXT) RP PC
 def p_print(p):
     '''
     print : PRINT LP ID RP PC
@@ -225,16 +220,23 @@ def p_print(p):
     p[0] = ('print', p[3])
 
 
-#if_stmt -> IF ID LK single_stmt RK [ELSE LK single_stmt RK
+# if_stmt → IF LP ID RP LK sentence RK [ELSE LK sentence RK]
 def p_if_stmt(p):
     '''
-    if_stmt : IF ID LK single_stmt RK
-            | IF ID LK single_stmt RK ELSE LK single_stmt RK
+    if_stmt : IF LP ID RP LK sentence RK
+            | IF LP ID RP LK sentence RK ELSE LK sentence RK
     '''
-    if len(p) == 6:
-        p[0] = ('if', p[2], p[4])
+    if len(p) == 8:
+        p[0] = ('if', p[3], p[6])
     else:
-        p[0] = ('if', p[2], p[4],'else', p[8])
+        p[0] = ('if', p[3], p[6], 'else', p[10])
+
+
+#def p_id(p):
+#   '''
+#  id : ID
+# '''
+# #p[0] = ('var', p[1])
 
 
 def p_error(p):
@@ -260,13 +262,28 @@ def run(p):
         elif p[0] == "=":
             env[p[1]] = run(p[2])
             print(env)
-        elif p[0] == "sum" or p[0] == "print":
-            print(p[1])
-    else: #Reconoce un numero y lo retorna
+        elif p[0] == "if":
+            if env[p[1]] > 0:
+                return run(p[2])
+            elif len(p) > 3 and p[3] == "else":
+                return run(p[4])
+        elif p[0] == "var":
+            return env[p[1]]
+        elif p[0] == "sum":
+            print(env[p[1]])
+        elif p[0] == "print":
+            try:
+                print(env[p[1]])
+            except KeyError:
+                print(p[1][1:-1])
+        elif p[0] == "sentence":
+            run(p[1])
+            run(p[2])
+    else: # Reconoce un numero y lo retorna
         return p
 
 
-#Construcción del analizador sintáctico
+# Construcción del analizador sintáctico
 parser = yacc.yacc()
 
 with open('archivo', 'r') as f:
