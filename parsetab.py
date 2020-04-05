@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftIGUALleftMASMENOSleftMULDIVCOMA DIGIT DIV ELSE ID IF IGUAL INT LK LP MAIN MAS MENOS MUL PC PRINT RK RP SUM TEXT\n    ini : main\n        | vacio\n    \n    main : MAIN LK sentence RK\n         | MAIN LK vacio RK\n    \n    vacio :\n    \n    sentence : single_stmt\n            | if_stmt\n            | sentence single_stmt\n            | sentence if_stmt\n    \n    single_stmt : int_decl\n                | single_op\n                | sum_function\n                | print\n    \n      int_decl : INT ID IGUAL term PC\n    \n    term : term operator DIGIT\n         | DIGIT\n         | term operator id\n         | id\n         | term operator sum_function\n         | sum_function\n    \n    sum_function : SUM LP id RP PC\n    \n    operator : MAS\n            | MENOS\n            | MUL\n            | DIV\n    \n    single_op : id IGUAL term PC\n    \n    print : PRINT LP id RP PC\n          | PRINT LP TEXT RP PC\n    \n    if_stmt : IF LP ID RP LK sentence RK\n            | IF LP ID RP LK sentence RK ELSE LK sentence RK\n    \n   id : ID\n   '
+_lr_signature = 'leftIGUALleftMASMENOSleftMULDIVCOMA DIGIT DIV ELSE ID IF IGUAL INT LK LP MAIN MAS MENOS MUL PC PRINT RK RP SUM TEXT\n    ini : main\n        | vacio\n    \n    main : MAIN LK sentence RK\n         | MAIN LK vacio RK\n    \n    vacio :\n    \n    sentence : single_stmt\n            | if_stmt\n            | sentence single_stmt\n            | sentence if_stmt\n    \n    single_stmt : int_decl\n                | single_op\n                | sum_function\n                | print\n    \n      int_decl : INT ID IGUAL term PC\n    \n    term : term operator term_2\n         | term_2\n    \n    term_2 : term_2 operator_2 DIGIT\n            | term_2 operator_2 id\n            | term_2 operator_2 sum_function\n            | DIGIT\n            | id\n            | term\n            | sum_function\n    \n    sum_function : SUM LP id RP PC\n    \n    operator : MAS\n            | MENOS\n\n    \n    operator_2 : MUL\n               | DIV\n    \n    single_op : id IGUAL term PC\n    \n    print : PRINT LP id RP PC\n          | PRINT LP TEXT RP PC\n    \n    if_stmt : IF LP ID RP LK sentence RK\n            | IF LP ID RP LK sentence RK ELSE LK sentence RK\n    \n   id : ID\n   '
     
-_lr_action_items = {'MAIN':([0,],[4,]),'$end':([0,1,2,3,20,23,],[-5,0,-1,-2,-3,-4,]),'LK':([4,38,59,],[5,49,60,]),'RK':([5,6,7,8,9,10,11,12,13,21,22,40,50,54,55,56,57,58,61,62,],[-5,20,23,-6,-7,-10,-11,-12,-13,-8,-9,-26,-14,-21,-27,-28,58,-29,62,-30,]),'IF':([5,6,8,9,10,11,12,13,21,22,40,49,50,54,55,56,57,58,60,61,62,],[14,14,-6,-7,-10,-11,-12,-13,-8,-9,-26,14,-14,-21,-27,-28,14,-29,14,14,-30,]),'INT':([5,6,8,9,10,11,12,13,21,22,40,49,50,54,55,56,57,58,60,61,62,],[16,16,-6,-7,-10,-11,-12,-13,-8,-9,-26,16,-14,-21,-27,-28,16,-29,16,16,-30,]),'SUM':([5,6,8,9,10,11,12,13,21,22,26,30,40,41,42,43,44,45,49,50,54,55,56,57,58,60,61,62,],[18,18,-6,-7,-10,-11,-12,-13,-8,-9,18,18,-26,18,-22,-23,-24,-25,18,-14,-21,-27,-28,18,-29,18,18,-30,]),'PRINT':([5,6,8,9,10,11,12,13,21,22,40,49,50,54,55,56,57,58,60,61,62,],[19,19,-6,-7,-10,-11,-12,-13,-8,-9,-26,19,-14,-21,-27,-28,19,-29,19,19,-30,]),'ID':([5,6,8,9,10,11,12,13,16,21,22,24,26,27,28,30,40,41,42,43,44,45,49,50,54,55,56,57,58,60,61,62,],[15,15,-6,-7,-10,-11,-12,-13,25,-8,-9,29,15,15,15,15,-26,15,-22,-23,-24,-25,15,-14,-21,-27,-28,15,-29,15,15,-30,]),'LP':([14,18,19,],[24,27,28,]),'IGUAL':([15,17,25,],[-31,26,30,]),'PC':([15,31,32,33,34,39,46,47,48,51,52,53,54,],[-31,-18,40,-16,-20,50,54,55,56,-15,-17,-19,-21,]),'MAS':([15,31,32,33,34,39,51,52,53,54,],[-31,-18,42,-16,-20,42,-15,-17,-19,-21,]),'MENOS':([15,31,32,33,34,39,51,52,53,54,],[-31,-18,43,-16,-20,43,-15,-17,-19,-21,]),'MUL':([15,31,32,33,34,39,51,52,53,54,],[-31,-18,44,-16,-20,44,-15,-17,-19,-21,]),'DIV':([15,31,32,33,34,39,51,52,53,54,],[-31,-18,45,-16,-20,45,-15,-17,-19,-21,]),'RP':([15,29,35,36,37,],[-31,38,46,47,48,]),'DIGIT':([26,30,41,42,43,44,45,],[33,33,51,-22,-23,-24,-25,]),'TEXT':([28,],[37,]),'ELSE':([58,],[59,]),}
+_lr_action_items = {'MAIN':([0,],[4,]),'$end':([0,1,2,3,20,23,],[-5,0,-1,-2,-3,-4,]),'LK':([4,39,63,],[5,51,64,]),'RK':([5,6,7,8,9,10,11,12,13,21,22,41,52,58,59,60,61,62,65,66,],[-5,20,23,-6,-7,-10,-11,-12,-13,-8,-9,-29,-14,-24,-30,-31,62,-32,66,-33,]),'IF':([5,6,8,9,10,11,12,13,21,22,41,51,52,58,59,60,61,62,64,65,66,],[14,14,-6,-7,-10,-11,-12,-13,-8,-9,-29,14,-14,-24,-30,-31,14,-32,14,14,-33,]),'INT':([5,6,8,9,10,11,12,13,21,22,41,51,52,58,59,60,61,62,64,65,66,],[16,16,-6,-7,-10,-11,-12,-13,-8,-9,-29,16,-14,-24,-30,-31,16,-32,16,16,-33,]),'SUM':([5,6,8,9,10,11,12,13,21,22,26,30,41,42,43,44,45,46,47,51,52,58,59,60,61,62,64,65,66,],[18,18,-6,-7,-10,-11,-12,-13,-8,-9,18,18,-29,18,-25,-26,18,-27,-28,18,-14,-24,-30,-31,18,-32,18,18,-33,]),'PRINT':([5,6,8,9,10,11,12,13,21,22,41,51,52,58,59,60,61,62,64,65,66,],[19,19,-6,-7,-10,-11,-12,-13,-8,-9,-29,19,-14,-24,-30,-31,19,-32,19,19,-33,]),'ID':([5,6,8,9,10,11,12,13,16,21,22,24,26,27,28,30,41,42,43,44,45,46,47,51,52,58,59,60,61,62,64,65,66,],[15,15,-6,-7,-10,-11,-12,-13,25,-8,-9,29,15,15,15,15,-29,15,-25,-26,15,-27,-28,15,-14,-24,-30,-31,15,-32,15,15,-33,]),'LP':([14,18,19,],[24,27,28,]),'IGUAL':([15,17,25,],[-34,26,30,]),'PC':([15,31,32,33,34,35,40,48,49,50,53,54,55,56,57,58,],[-34,-21,41,-16,-20,-23,52,58,59,60,-22,-15,-17,-18,-19,-24,]),'MAS':([15,31,32,33,34,35,40,53,54,55,56,57,58,],[-34,-21,43,-16,-20,-23,43,43,-15,-17,-18,-19,-24,]),'MENOS':([15,31,32,33,34,35,40,53,54,55,56,57,58,],[-34,-21,44,-16,-20,-23,44,44,-15,-17,-18,-19,-24,]),'MUL':([15,31,32,33,34,35,40,53,54,55,56,57,58,],[-34,-21,-22,46,-20,-23,-22,-22,46,-17,-18,-19,-24,]),'DIV':([15,31,32,33,34,35,40,53,54,55,56,57,58,],[-34,-21,-22,47,-20,-23,-22,-22,47,-17,-18,-19,-24,]),'RP':([15,29,36,37,38,],[-34,39,48,49,50,]),'DIGIT':([26,30,42,43,44,45,46,47,],[34,34,34,-25,-26,55,-27,-28,]),'TEXT':([28,],[38,]),'ELSE':([62,],[63,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'ini':([0,],[1,]),'main':([0,],[2,]),'vacio':([0,5,],[3,7,]),'sentence':([5,49,60,],[6,57,61,]),'single_stmt':([5,6,49,57,60,61,],[8,21,8,21,8,21,]),'if_stmt':([5,6,49,57,60,61,],[9,22,9,22,9,22,]),'int_decl':([5,6,49,57,60,61,],[10,10,10,10,10,10,]),'single_op':([5,6,49,57,60,61,],[11,11,11,11,11,11,]),'sum_function':([5,6,26,30,41,49,57,60,61,],[12,12,34,34,53,12,12,12,12,]),'print':([5,6,49,57,60,61,],[13,13,13,13,13,13,]),'id':([5,6,26,27,28,30,41,49,57,60,61,],[17,17,31,35,36,31,52,17,17,17,17,]),'term':([26,30,],[32,39,]),'operator':([32,39,],[41,41,]),}
+_lr_goto_items = {'ini':([0,],[1,]),'main':([0,],[2,]),'vacio':([0,5,],[3,7,]),'sentence':([5,51,64,],[6,61,65,]),'single_stmt':([5,6,51,61,64,65,],[8,21,8,21,8,21,]),'if_stmt':([5,6,51,61,64,65,],[9,22,9,22,9,22,]),'int_decl':([5,6,51,61,64,65,],[10,10,10,10,10,10,]),'single_op':([5,6,51,61,64,65,],[11,11,11,11,11,11,]),'sum_function':([5,6,26,30,42,45,51,61,64,65,],[12,12,35,35,35,57,12,12,12,12,]),'print':([5,6,51,61,64,65,],[13,13,13,13,13,13,]),'id':([5,6,26,27,28,30,42,45,51,61,64,65,],[17,17,31,36,37,31,31,56,17,17,17,17,]),'term':([26,30,42,],[32,40,53,]),'term_2':([26,30,42,],[33,33,54,]),'operator':([32,40,53,],[42,42,42,]),'operator_2':([33,54,],[45,45,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -41,21 +41,24 @@ _lr_productions = [
   ('single_stmt -> sum_function','single_stmt',1,'p_single_stmt','Tuii.py',157),
   ('single_stmt -> print','single_stmt',1,'p_single_stmt','Tuii.py',158),
   ('int_decl -> INT ID IGUAL term PC','int_decl',5,'p_int_decl','Tuii.py',166),
-  ('term -> term operator DIGIT','term',3,'p_term','Tuii.py',174),
-  ('term -> DIGIT','term',1,'p_term','Tuii.py',175),
-  ('term -> term operator id','term',3,'p_term','Tuii.py',176),
-  ('term -> id','term',1,'p_term','Tuii.py',177),
-  ('term -> term operator sum_function','term',3,'p_term','Tuii.py',178),
-  ('term -> sum_function','term',1,'p_term','Tuii.py',179),
-  ('sum_function -> SUM LP id RP PC','sum_function',5,'p_sum_function','Tuii.py',190),
-  ('operator -> MAS','operator',1,'p_operator','Tuii.py',198),
-  ('operator -> MENOS','operator',1,'p_operator','Tuii.py',199),
-  ('operator -> MUL','operator',1,'p_operator','Tuii.py',200),
-  ('operator -> DIV','operator',1,'p_operator','Tuii.py',201),
-  ('single_op -> id IGUAL term PC','single_op',4,'p_single_op','Tuii.py',209),
-  ('print -> PRINT LP id RP PC','print',5,'p_print','Tuii.py',217),
-  ('print -> PRINT LP TEXT RP PC','print',5,'p_print','Tuii.py',218),
-  ('if_stmt -> IF LP ID RP LK sentence RK','if_stmt',7,'p_if_stmt','Tuii.py',226),
-  ('if_stmt -> IF LP ID RP LK sentence RK ELSE LK sentence RK','if_stmt',11,'p_if_stmt','Tuii.py',227),
-  ('id -> ID','id',1,'p_id','Tuii.py',237),
+  ('term -> term operator term_2','term',3,'p_term','Tuii.py',173),
+  ('term -> term_2','term',1,'p_term','Tuii.py',174),
+  ('term_2 -> term_2 operator_2 DIGIT','term_2',3,'p_term_2','Tuii.py',183),
+  ('term_2 -> term_2 operator_2 id','term_2',3,'p_term_2','Tuii.py',184),
+  ('term_2 -> term_2 operator_2 sum_function','term_2',3,'p_term_2','Tuii.py',185),
+  ('term_2 -> DIGIT','term_2',1,'p_term_2','Tuii.py',186),
+  ('term_2 -> id','term_2',1,'p_term_2','Tuii.py',187),
+  ('term_2 -> term','term_2',1,'p_term_2','Tuii.py',188),
+  ('term_2 -> sum_function','term_2',1,'p_term_2','Tuii.py',189),
+  ('sum_function -> SUM LP id RP PC','sum_function',5,'p_sum_function','Tuii.py',199),
+  ('operator -> MAS','operator',1,'p_operator','Tuii.py',207),
+  ('operator -> MENOS','operator',1,'p_operator','Tuii.py',208),
+  ('operator_2 -> MUL','operator_2',1,'p_operator_2','Tuii.py',215),
+  ('operator_2 -> DIV','operator_2',1,'p_operator_2','Tuii.py',216),
+  ('single_op -> id IGUAL term PC','single_op',4,'p_single_op','Tuii.py',223),
+  ('print -> PRINT LP id RP PC','print',5,'p_print','Tuii.py',231),
+  ('print -> PRINT LP TEXT RP PC','print',5,'p_print','Tuii.py',232),
+  ('if_stmt -> IF LP ID RP LK sentence RK','if_stmt',7,'p_if_stmt','Tuii.py',240),
+  ('if_stmt -> IF LP ID RP LK sentence RK ELSE LK sentence RK','if_stmt',11,'p_if_stmt','Tuii.py',241),
+  ('id -> ID','id',1,'p_id','Tuii.py',251),
 ]

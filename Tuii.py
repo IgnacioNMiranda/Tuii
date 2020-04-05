@@ -119,7 +119,7 @@ def p_ini(p):
     print(run(p[1]))
 
 
-# main → MAIN LK sentence RK
+# main → MAIN LK sentence RK | MAIN LK vacio RK
 def p_main(p):
     '''
     main : MAIN LK sentence RK
@@ -127,7 +127,7 @@ def p_main(p):
     '''
     p[0] = p[3]
 
-
+# vacio →
 def p_vacio(p):
     '''
     vacio :
@@ -135,7 +135,7 @@ def p_vacio(p):
     p[0] = None
 
 
-# sentence → single_stmt | if_stmt | single_stmt sentence | if_stmt sentence
+# sentence → single_stmt | if_stmt | sentence single_stmt | sentence if_stmt
 def p_sentence(p):
     '''
     sentence : single_stmt
@@ -167,22 +167,32 @@ def p_int_decl(p):
     '''
     p[0] = ('=', p[2], p[4])
 
-
-# term → [term operator] (DIGIT | ID | sum_function)
+# term → term operator_plus_minus term_2 | term_2
 def p_term(p):
     '''
-    term : term operator DIGIT
-         | DIGIT
-         | term operator id
-         | id
-         | term operator sum_function
-         | sum_function
+    term : term operator_plus_minus term_2
+         | term_2
     '''
     if len(p) == 2:
         p[0] = p[1]
     else:
         p[0] = (p[2], p[1], p[3])
 
+def p_term_2(p):
+    '''
+    term_2 : term_2 operator_mul_div DIGIT
+            | term_2 operator_mul_div id
+            | term_2 operator_mul_div sum_function
+            | DIGIT
+            | id
+            | sum_function
+            | term
+
+    '''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = (p[2], p[1], p[3])
 
 # sum_function → SUM LP ID RP PC
 def p_sum_function(p):
@@ -192,16 +202,22 @@ def p_sum_function(p):
     p[0] = ('sum', p[3])
 
 
-# operator → MAS | MENOS | MUL | DIV
-def p_operator(p):
+# operator → MAS | MENOS
+def p_operator_plus_minus(p):
     '''
     operator : MAS
             | MENOS
-            | MUL
-            | DIV
+
     '''
     p[0] = p[1]
 
+# operator → MUL | DIV
+def p_operator_mul_div(p):
+    '''
+    operator_2 : MUL
+               | DIV
+    '''
+    p[0] = p[1]
 
 # single_op → ID IGUAL term PC
 def p_single_op(p):
@@ -232,6 +248,7 @@ def p_if_stmt(p):
         p[0] = ('if', p[3], p[6], 'else', p[10])
 
 
+# id → ID
 def p_id(p):
    '''
    id : ID
@@ -239,11 +256,10 @@ def p_id(p):
    p[0] = ('var', p[1])
 
 
+# ERROR
 def p_error(p):
     if not p:
         print("Error de Sintaxis")
-#
-
 
 #Ambiente
 env = {}
