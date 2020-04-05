@@ -155,7 +155,7 @@ def p_single_stmt(p):
     '''
     single_stmt : int_decl
                 | single_op
-                | sum_function
+                | sum_function PC
                 | print
     '''
     p[0] = p[1]
@@ -195,10 +195,11 @@ def p_term_2(p):
     else:
         p[0] = (p[2], p[1], p[3])
 
-# sum_function → SUM LP ID RP PC
+
+# sum_function → SUM LP ID RP
 def p_sum_function(p):
     '''
-    sum_function : SUM LP id RP PC
+    sum_function : SUM LP ID RP
     '''
     p[0] = ('sum', p[3])
 
@@ -232,7 +233,7 @@ def p_single_op(p):
 # print → PRINT LP (ID | TEXT) RP PC
 def p_print(p):
     '''
-    print : PRINT LP id RP PC
+    print : PRINT LP ID RP PC
           | PRINT LP TEXT RP PC
     '''
     p[0] = ('print', p[3])
@@ -277,18 +278,18 @@ def run(p):
             return run(p[1]) * run(p[2])
         elif p[0] == "/":
             return run(p[1]) / run(p[2])
-        elif p[0] == "=":
+        elif p[0] == "=":  # Asignación de variables
             env[p[1]] = run(p[2])
             print(env)
         elif p[0] == "if":
-            if env[p[1]] > 0:
+            if env[p[1]] > 0:  # Si la variable es > 0 se ejecuta el bloque dentro del if
                 return run(p[2])
-            elif len(p) > 3 and p[3] == "else":
+            elif len(p) > 3 and p[3] == "else":  # Si no se cumple la condicion y el if posee else, este se ejecuta
                 return run(p[4])
-        elif p[0] == "var":
+        elif p[0] == "var":  # Si se asigna a una variable el valor de otra, se recupera su valor
             return env[p[1]]
-        elif p[0] == "sum":
-            print(env[p[1]])
+        elif p[0] == "sum":  # Se imprime el valor de la variable ya que se hace sum a una variable de tipo entero
+            return env[p[1]]
         elif p[0] == "print":
             try:
                 print(env[p[1]])  # En caso de ser una variable, imprime su valor
