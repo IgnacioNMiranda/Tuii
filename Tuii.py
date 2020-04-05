@@ -86,16 +86,16 @@ def t_error(t):
 # Validación de espacios en blanco#
 t_ignore = " \t"
 
+
 # Saltos de línea
 def t_newline(t):
     r'\n+'
-    print("Newline")
     t.lexer.lineno += len(t.value)
 
 
 # Ejecución del lexer
 lexer = lex.lex()
-with open('archivo', 'r') as f:
+with open('archivo.txt', 'r') as f:
     contents = f.read()
     lex.input(contents)
     print("Análisis Léxico\n\nStructure: LexToken(type,value,lineno,lexpos)")
@@ -303,11 +303,12 @@ def run(p):
 
 # Construcción del analizador sintáctico
 parser = yacc.yacc()
-
-with open('archivo', 'r') as f:
+text = ""
+with open('archivo.txt', 'r') as f:
     print("\n\nAnálisis Sintáctico")
     for line in f:
         try:
-            yacc.parse(line)
+            text += line
         except EOFError:
             break
+parser.parse(text)

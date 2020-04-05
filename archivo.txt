@@ -1,0 +1,10 @@
+main {
+    int x = -1*2 + 4*5;
+    int y = x;
+    x = 23+y;
+    if(y){
+       print("Y es mayor que 0");
+    } else {
+       print("Y es menor o igual a 0");
+    }
+}
