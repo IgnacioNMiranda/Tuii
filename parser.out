@@ -18,7 +18,7 @@ Rule 8     sentence -> sentence single_stmt
 Rule 9     sentence -> sentence if_stmt
 Rule 10    single_stmt -> int_decl
 Rule 11    single_stmt -> single_op
-Rule 12    single_stmt -> sum_function
+Rule 12    single_stmt -> sum_function PC
 Rule 13    single_stmt -> print
 Rule 14    int_decl -> INT ID IGUAL term PC
 Rule 15    term -> term operator_plus_minus term_2
@@ -30,13 +30,13 @@ Rule 20    term_2 -> DIGIT
 Rule 21    term_2 -> id
 Rule 22    term_2 -> sum_function
 Rule 23    term_2 -> term
-Rule 24    sum_function -> SUM LP id RP PC
+Rule 24    sum_function -> SUM LP ID RP
 Rule 25    operator_plus_minus -> MAS
 Rule 26    operator_plus_minus -> MENOS
 Rule 27    operator_mul_div -> MUL
 Rule 28    operator_mul_div -> DIV
 Rule 29    single_op -> ID IGUAL term PC
-Rule 30    print -> PRINT LP id RP PC
+Rule 30    print -> PRINT LP ID RP PC
 Rule 31    print -> PRINT LP TEXT RP PC
 Rule 32    if_stmt -> IF LP ID RP LK sentence RK
 Rule 33    if_stmt -> IF LP ID RP LK sentence RK ELSE LK sentence RK
@@ -48,7 +48,7 @@ COMA                 :
 DIGIT                : 17 20
 DIV                  : 28
 ELSE                 : 33
-ID                   : 14 29 32 33 34
+ID                   : 14 24 29 30 32 33 34
 IF                   : 32 33
 IGUAL                : 14 29
 INT                  : 14
@@ -58,7 +58,7 @@ MAIN                 : 3 4
 MAS                  : 25
 MENOS                : 26
 MUL                  : 27
-PC                   : 14 24 29 30 31
+PC                   : 12 14 29 30 31
 PRINT                : 30 31
 RK                   : 3 4 32 33 33
 RP                   : 24 30 31 32 33
@@ -68,7 +68,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
-id                   : 18 21 24 30
+id                   : 18 21
 if_stmt              : 7 9
 ini                  : 0
 int_decl             : 10
@@ -141,14 +141,14 @@ state 5
     (5) vacio -> .
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     RK              reduce using rule 5 (vacio -> .)
@@ -174,14 +174,14 @@ state 6
     (9) sentence -> sentence . if_stmt
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     RK              shift and go to state 19
@@ -255,14 +255,9 @@ state 11
 
 state 12
 
-    (12) single_stmt -> sum_function .
+    (12) single_stmt -> sum_function . PC
 
-    RK              reduce using rule 12 (single_stmt -> sum_function .)
-    IF              reduce using rule 12 (single_stmt -> sum_function .)
-    INT             reduce using rule 12 (single_stmt -> sum_function .)
-    ID              reduce using rule 12 (single_stmt -> sum_function .)
-    SUM             reduce using rule 12 (single_stmt -> sum_function .)
-    PRINT           reduce using rule 12 (single_stmt -> sum_function .)
+    PC              shift and go to state 23
 
 
 state 13
@@ -282,36 +277,36 @@ state 14
     (32) if_stmt -> IF . LP ID RP LK sentence RK
     (33) if_stmt -> IF . LP ID RP LK sentence RK ELSE LK sentence RK
 
-    LP              shift and go to state 23
+    LP              shift and go to state 24
 
 
 state 15
 
     (29) single_op -> ID . IGUAL term PC
 
-    IGUAL           shift and go to state 24
+    IGUAL           shift and go to state 25
 
 
 state 16
 
     (14) int_decl -> INT . ID IGUAL term PC
 
-    ID              shift and go to state 25
+    ID              shift and go to state 26
 
 
 state 17
 
-    (24) sum_function -> SUM . LP id RP PC
+    (24) sum_function -> SUM . LP ID RP
 
-    LP              shift and go to state 26
+    LP              shift and go to state 27
 
 
 state 18
 
-    (30) print -> PRINT . LP id RP PC
+    (30) print -> PRINT . LP ID RP PC
     (31) print -> PRINT . LP TEXT RP PC
 
-    LP              shift and go to state 27
+    LP              shift and go to state 28
 
 
 state 19
@@ -354,13 +349,25 @@ state 22
 
 state 23
 
-    (32) if_stmt -> IF LP . ID RP LK sentence RK
-    (33) if_stmt -> IF LP . ID RP LK sentence RK ELSE LK sentence RK
+    (12) single_stmt -> sum_function PC .
 
-    ID              shift and go to state 28
+    RK              reduce using rule 12 (single_stmt -> sum_function PC .)
+    IF              reduce using rule 12 (single_stmt -> sum_function PC .)
+    INT             reduce using rule 12 (single_stmt -> sum_function PC .)
+    ID              reduce using rule 12 (single_stmt -> sum_function PC .)
+    SUM             reduce using rule 12 (single_stmt -> sum_function PC .)
+    PRINT           reduce using rule 12 (single_stmt -> sum_function PC .)
 
 
 state 24
+
+    (32) if_stmt -> IF LP . ID RP LK sentence RK
+    (33) if_stmt -> IF LP . ID RP LK sentence RK ELSE LK sentence RK
+
+    ID              shift and go to state 29
+
+
+state 25
 
     (29) single_op -> ID IGUAL . term PC
     (15) term -> . term operator_plus_minus term_2
@@ -373,53 +380,49 @@ state 24
     (22) term_2 -> . sum_function
     (23) term_2 -> . term
     (34) id -> . ID
-    (24) sum_function -> . SUM LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
 
-    DIGIT           shift and go to state 32
-    ID              shift and go to state 29
+    DIGIT           shift and go to state 33
+    ID              shift and go to state 30
     SUM             shift and go to state 17
 
-    term                           shift and go to state 30
-    term_2                         shift and go to state 31
-    id                             shift and go to state 33
-    sum_function                   shift and go to state 34
-
-state 25
-
-    (14) int_decl -> INT ID . IGUAL term PC
-
-    IGUAL           shift and go to state 35
-
+    term                           shift and go to state 31
+    term_2                         shift and go to state 32
+    id                             shift and go to state 34
+    sum_function                   shift and go to state 35
 
 state 26
 
-    (24) sum_function -> SUM LP . id RP PC
-    (34) id -> . ID
+    (14) int_decl -> INT ID . IGUAL term PC
 
-    ID              shift and go to state 29
+    IGUAL           shift and go to state 36
 
-    id                             shift and go to state 36
 
 state 27
 
-    (30) print -> PRINT LP . id RP PC
-    (31) print -> PRINT LP . TEXT RP PC
-    (34) id -> . ID
+    (24) sum_function -> SUM LP . ID RP
 
-    TEXT            shift and go to state 38
-    ID              shift and go to state 29
+    ID              shift and go to state 37
 
-    id                             shift and go to state 37
 
 state 28
+
+    (30) print -> PRINT LP . ID RP PC
+    (31) print -> PRINT LP . TEXT RP PC
+
+    ID              shift and go to state 38
+    TEXT            shift and go to state 39
+
+
+state 29
 
     (32) if_stmt -> IF LP ID . RP LK sentence RK
     (33) if_stmt -> IF LP ID . RP LK sentence RK ELSE LK sentence RK
 
-    RP              shift and go to state 39
+    RP              shift and go to state 40
 
 
-state 29
+state 30
 
     (34) id -> ID .
 
@@ -428,10 +431,9 @@ state 29
     MENOS           reduce using rule 34 (id -> ID .)
     MUL             reduce using rule 34 (id -> ID .)
     DIV             reduce using rule 34 (id -> ID .)
-    RP              reduce using rule 34 (id -> ID .)
 
 
-state 30
+state 31
 
     (29) single_op -> ID IGUAL term . PC
     (15) term -> term . operator_plus_minus term_2
@@ -442,19 +444,19 @@ state 30
   ! shift/reduce conflict for PC resolved as shift
   ! shift/reduce conflict for MAS resolved as shift
   ! shift/reduce conflict for MENOS resolved as shift
-    PC              shift and go to state 40
+    PC              shift and go to state 41
     MUL             reduce using rule 23 (term_2 -> term .)
     DIV             reduce using rule 23 (term_2 -> term .)
-    MAS             shift and go to state 42
-    MENOS           shift and go to state 43
+    MAS             shift and go to state 43
+    MENOS           shift and go to state 44
 
   ! PC              [ reduce using rule 23 (term_2 -> term .) ]
   ! MAS             [ reduce using rule 23 (term_2 -> term .) ]
   ! MENOS           [ reduce using rule 23 (term_2 -> term .) ]
 
-    operator_plus_minus            shift and go to state 41
+    operator_plus_minus            shift and go to state 42
 
-state 31
+state 32
 
     (16) term -> term_2 .
     (17) term_2 -> term_2 . operator_mul_div DIGIT
@@ -468,15 +470,15 @@ state 31
     PC              reduce using rule 16 (term -> term_2 .)
     MAS             reduce using rule 16 (term -> term_2 .)
     MENOS           reduce using rule 16 (term -> term_2 .)
-    MUL             shift and go to state 45
-    DIV             shift and go to state 46
+    MUL             shift and go to state 46
+    DIV             shift and go to state 47
 
   ! MUL             [ reduce using rule 16 (term -> term_2 .) ]
   ! DIV             [ reduce using rule 16 (term -> term_2 .) ]
 
-    operator_mul_div               shift and go to state 44
+    operator_mul_div               shift and go to state 45
 
-state 32
+state 33
 
     (20) term_2 -> DIGIT .
 
@@ -487,7 +489,7 @@ state 32
     DIV             reduce using rule 20 (term_2 -> DIGIT .)
 
 
-state 33
+state 34
 
     (21) term_2 -> id .
 
@@ -498,7 +500,7 @@ state 33
     DIV             reduce using rule 21 (term_2 -> id .)
 
 
-state 34
+state 35
 
     (22) term_2 -> sum_function .
 
@@ -509,7 +511,7 @@ state 34
     DIV             reduce using rule 22 (term_2 -> sum_function .)
 
 
-state 35
+state 36
 
     (14) int_decl -> INT ID IGUAL . term PC
     (15) term -> . term operator_plus_minus term_2
@@ -522,47 +524,47 @@ state 35
     (22) term_2 -> . sum_function
     (23) term_2 -> . term
     (34) id -> . ID
-    (24) sum_function -> . SUM LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
 
-    DIGIT           shift and go to state 32
-    ID              shift and go to state 29
+    DIGIT           shift and go to state 33
+    ID              shift and go to state 30
     SUM             shift and go to state 17
 
-    term                           shift and go to state 47
-    term_2                         shift and go to state 31
-    id                             shift and go to state 33
-    sum_function                   shift and go to state 34
-
-state 36
-
-    (24) sum_function -> SUM LP id . RP PC
-
-    RP              shift and go to state 48
-
+    term                           shift and go to state 48
+    term_2                         shift and go to state 32
+    id                             shift and go to state 34
+    sum_function                   shift and go to state 35
 
 state 37
 
-    (30) print -> PRINT LP id . RP PC
+    (24) sum_function -> SUM LP ID . RP
 
     RP              shift and go to state 49
 
 
 state 38
 
-    (31) print -> PRINT LP TEXT . RP PC
+    (30) print -> PRINT LP ID . RP PC
 
     RP              shift and go to state 50
 
 
 state 39
 
-    (32) if_stmt -> IF LP ID RP . LK sentence RK
-    (33) if_stmt -> IF LP ID RP . LK sentence RK ELSE LK sentence RK
+    (31) print -> PRINT LP TEXT . RP PC
 
-    LK              shift and go to state 51
+    RP              shift and go to state 51
 
 
 state 40
+
+    (32) if_stmt -> IF LP ID RP . LK sentence RK
+    (33) if_stmt -> IF LP ID RP . LK sentence RK ELSE LK sentence RK
+
+    LK              shift and go to state 52
+
+
+state 41
 
     (29) single_op -> ID IGUAL term PC .
 
@@ -574,7 +576,7 @@ state 40
     PRINT           reduce using rule 29 (single_op -> ID IGUAL term PC .)
 
 
-state 41
+state 42
 
     (15) term -> term operator_plus_minus . term_2
     (17) term_2 -> . term_2 operator_mul_div DIGIT
@@ -585,20 +587,20 @@ state 41
     (22) term_2 -> . sum_function
     (23) term_2 -> . term
     (34) id -> . ID
-    (24) sum_function -> . SUM LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
     (15) term -> . term operator_plus_minus term_2
     (16) term -> . term_2
 
-    DIGIT           shift and go to state 32
-    ID              shift and go to state 29
+    DIGIT           shift and go to state 33
+    ID              shift and go to state 30
     SUM             shift and go to state 17
 
-    term                           shift and go to state 52
-    term_2                         shift and go to state 53
-    id                             shift and go to state 33
-    sum_function                   shift and go to state 34
+    term                           shift and go to state 53
+    term_2                         shift and go to state 54
+    id                             shift and go to state 34
+    sum_function                   shift and go to state 35
 
-state 42
+state 43
 
     (25) operator_plus_minus -> MAS .
 
@@ -607,7 +609,7 @@ state 42
     SUM             reduce using rule 25 (operator_plus_minus -> MAS .)
 
 
-state 43
+state 44
 
     (26) operator_plus_minus -> MENOS .
 
@@ -616,22 +618,22 @@ state 43
     SUM             reduce using rule 26 (operator_plus_minus -> MENOS .)
 
 
-state 44
+state 45
 
     (17) term_2 -> term_2 operator_mul_div . DIGIT
     (18) term_2 -> term_2 operator_mul_div . id
     (19) term_2 -> term_2 operator_mul_div . sum_function
     (34) id -> . ID
-    (24) sum_function -> . SUM LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
 
-    DIGIT           shift and go to state 54
-    ID              shift and go to state 29
+    DIGIT           shift and go to state 55
+    ID              shift and go to state 30
     SUM             shift and go to state 17
 
-    id                             shift and go to state 55
-    sum_function                   shift and go to state 56
+    id                             shift and go to state 56
+    sum_function                   shift and go to state 57
 
-state 45
+state 46
 
     (27) operator_mul_div -> MUL .
 
@@ -640,7 +642,7 @@ state 45
     SUM             reduce using rule 27 (operator_mul_div -> MUL .)
 
 
-state 46
+state 47
 
     (28) operator_mul_div -> DIV .
 
@@ -649,7 +651,7 @@ state 46
     SUM             reduce using rule 28 (operator_mul_div -> DIV .)
 
 
-state 47
+state 48
 
     (14) int_decl -> INT ID IGUAL term . PC
     (15) term -> term . operator_plus_minus term_2
@@ -660,40 +662,44 @@ state 47
   ! shift/reduce conflict for PC resolved as shift
   ! shift/reduce conflict for MAS resolved as shift
   ! shift/reduce conflict for MENOS resolved as shift
-    PC              shift and go to state 57
+    PC              shift and go to state 58
     MUL             reduce using rule 23 (term_2 -> term .)
     DIV             reduce using rule 23 (term_2 -> term .)
-    MAS             shift and go to state 42
-    MENOS           shift and go to state 43
+    MAS             shift and go to state 43
+    MENOS           shift and go to state 44
 
   ! PC              [ reduce using rule 23 (term_2 -> term .) ]
   ! MAS             [ reduce using rule 23 (term_2 -> term .) ]
   ! MENOS           [ reduce using rule 23 (term_2 -> term .) ]
 
-    operator_plus_minus            shift and go to state 41
-
-state 48
-
-    (24) sum_function -> SUM LP id RP . PC
-
-    PC              shift and go to state 58
-
+    operator_plus_minus            shift and go to state 42
 
 state 49
 
-    (30) print -> PRINT LP id RP . PC
+    (24) sum_function -> SUM LP ID RP .
+
+    PC              reduce using rule 24 (sum_function -> SUM LP ID RP .)
+    MAS             reduce using rule 24 (sum_function -> SUM LP ID RP .)
+    MENOS           reduce using rule 24 (sum_function -> SUM LP ID RP .)
+    MUL             reduce using rule 24 (sum_function -> SUM LP ID RP .)
+    DIV             reduce using rule 24 (sum_function -> SUM LP ID RP .)
+
+
+state 50
+
+    (30) print -> PRINT LP ID RP . PC
 
     PC              shift and go to state 59
 
 
-state 50
+state 51
 
     (31) print -> PRINT LP TEXT RP . PC
 
     PC              shift and go to state 60
 
 
-state 51
+state 52
 
     (32) if_stmt -> IF LP ID RP LK . sentence RK
     (33) if_stmt -> IF LP ID RP LK . sentence RK ELSE LK sentence RK
@@ -703,14 +709,14 @@ state 51
     (9) sentence -> . sentence if_stmt
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     IF              shift and go to state 14
@@ -727,7 +733,7 @@ state 51
     sum_function                   shift and go to state 12
     print                          shift and go to state 13
 
-state 52
+state 53
 
     (23) term_2 -> term .
     (15) term -> term . operator_plus_minus term_2
@@ -739,15 +745,15 @@ state 52
     MUL             reduce using rule 23 (term_2 -> term .)
     DIV             reduce using rule 23 (term_2 -> term .)
     PC              reduce using rule 23 (term_2 -> term .)
-    MAS             shift and go to state 42
-    MENOS           shift and go to state 43
+    MAS             shift and go to state 43
+    MENOS           shift and go to state 44
 
   ! MAS             [ reduce using rule 23 (term_2 -> term .) ]
   ! MENOS           [ reduce using rule 23 (term_2 -> term .) ]
 
-    operator_plus_minus            shift and go to state 41
+    operator_plus_minus            shift and go to state 42
 
-state 53
+state 54
 
     (15) term -> term operator_plus_minus term_2 .
     (17) term_2 -> term_2 . operator_mul_div DIGIT
@@ -767,8 +773,8 @@ state 53
     PC              reduce using rule 15 (term -> term operator_plus_minus term_2 .)
     MAS             reduce using rule 15 (term -> term operator_plus_minus term_2 .)
     MENOS           reduce using rule 15 (term -> term operator_plus_minus term_2 .)
-    MUL             shift and go to state 45
-    DIV             shift and go to state 46
+    MUL             shift and go to state 46
+    DIV             shift and go to state 47
 
   ! MUL             [ reduce using rule 15 (term -> term operator_plus_minus term_2 .) ]
   ! DIV             [ reduce using rule 15 (term -> term operator_plus_minus term_2 .) ]
@@ -778,9 +784,9 @@ state 53
   ! MAS             [ reduce using rule 16 (term -> term_2 .) ]
   ! MENOS           [ reduce using rule 16 (term -> term_2 .) ]
 
-    operator_mul_div               shift and go to state 44
+    operator_mul_div               shift and go to state 45
 
-state 54
+state 55
 
     (17) term_2 -> term_2 operator_mul_div DIGIT .
 
@@ -791,7 +797,7 @@ state 54
     DIV             reduce using rule 17 (term_2 -> term_2 operator_mul_div DIGIT .)
 
 
-state 55
+state 56
 
     (18) term_2 -> term_2 operator_mul_div id .
 
@@ -802,7 +808,7 @@ state 55
     DIV             reduce using rule 18 (term_2 -> term_2 operator_mul_div id .)
 
 
-state 56
+state 57
 
     (19) term_2 -> term_2 operator_mul_div sum_function .
 
@@ -813,7 +819,7 @@ state 56
     DIV             reduce using rule 19 (term_2 -> term_2 operator_mul_div sum_function .)
 
 
-state 57
+state 58
 
     (14) int_decl -> INT ID IGUAL term PC .
 
@@ -825,33 +831,16 @@ state 57
     PRINT           reduce using rule 14 (int_decl -> INT ID IGUAL term PC .)
 
 
-state 58
-
-    (24) sum_function -> SUM LP id RP PC .
-
-    RK              reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    IF              reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    INT             reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    ID              reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    SUM             reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    PRINT           reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    PC              reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    MAS             reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    MENOS           reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    MUL             reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-    DIV             reduce using rule 24 (sum_function -> SUM LP id RP PC .)
-
-
 state 59
 
-    (30) print -> PRINT LP id RP PC .
+    (30) print -> PRINT LP ID RP PC .
 
-    RK              reduce using rule 30 (print -> PRINT LP id RP PC .)
-    IF              reduce using rule 30 (print -> PRINT LP id RP PC .)
-    INT             reduce using rule 30 (print -> PRINT LP id RP PC .)
-    ID              reduce using rule 30 (print -> PRINT LP id RP PC .)
-    SUM             reduce using rule 30 (print -> PRINT LP id RP PC .)
-    PRINT           reduce using rule 30 (print -> PRINT LP id RP PC .)
+    RK              reduce using rule 30 (print -> PRINT LP ID RP PC .)
+    IF              reduce using rule 30 (print -> PRINT LP ID RP PC .)
+    INT             reduce using rule 30 (print -> PRINT LP ID RP PC .)
+    ID              reduce using rule 30 (print -> PRINT LP ID RP PC .)
+    SUM             reduce using rule 30 (print -> PRINT LP ID RP PC .)
+    PRINT           reduce using rule 30 (print -> PRINT LP ID RP PC .)
 
 
 state 60
@@ -874,14 +863,14 @@ state 61
     (9) sentence -> sentence . if_stmt
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     RK              shift and go to state 62
@@ -928,14 +917,14 @@ state 64
     (9) sentence -> . sentence if_stmt
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     IF              shift and go to state 14
@@ -959,14 +948,14 @@ state 65
     (9) sentence -> sentence . if_stmt
     (10) single_stmt -> . int_decl
     (11) single_stmt -> . single_op
-    (12) single_stmt -> . sum_function
+    (12) single_stmt -> . sum_function PC
     (13) single_stmt -> . print
     (32) if_stmt -> . IF LP ID RP LK sentence RK
     (33) if_stmt -> . IF LP ID RP LK sentence RK ELSE LK sentence RK
     (14) int_decl -> . INT ID IGUAL term PC
     (29) single_op -> . ID IGUAL term PC
-    (24) sum_function -> . SUM LP id RP PC
-    (30) print -> . PRINT LP id RP PC
+    (24) sum_function -> . SUM LP ID RP
+    (30) print -> . PRINT LP ID RP PC
     (31) print -> . PRINT LP TEXT RP PC
 
     RK              shift and go to state 66
@@ -997,17 +986,17 @@ state 66
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PC in state 30 resolved as shift
-WARNING: shift/reduce conflict for MAS in state 30 resolved as shift
-WARNING: shift/reduce conflict for MENOS in state 30 resolved as shift
-WARNING: shift/reduce conflict for MUL in state 31 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 31 resolved as shift
-WARNING: shift/reduce conflict for PC in state 47 resolved as shift
-WARNING: shift/reduce conflict for MAS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MENOS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MAS in state 52 resolved as shift
-WARNING: shift/reduce conflict for MENOS in state 52 resolved as shift
-WARNING: shift/reduce conflict for MUL in state 53 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 53 resolved as shift
-WARNING: reduce/reduce conflict in state 53 resolved using rule (term -> term operator_plus_minus term_2)
-WARNING: rejected rule (term -> term_2) in state 53
+WARNING: shift/reduce conflict for PC in state 31 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 31 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 31 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 32 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 32 resolved as shift
+WARNING: shift/reduce conflict for PC in state 48 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 48 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 48 resolved as shift
+WARNING: shift/reduce conflict for MAS in state 53 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 53 resolved as shift
+WARNING: shift/reduce conflict for MUL in state 54 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 54 resolved as shift
+WARNING: reduce/reduce conflict in state 54 resolved using rule (term -> term operator_plus_minus term_2)
+WARNING: rejected rule (term -> term_2) in state 54

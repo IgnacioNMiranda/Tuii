@@ -1,10 +1,25 @@
 main {
     int x = -1*2 + 4*5;
     int y = x;
-    x = 23+y;
+    x = 23 + y;
     if(y){
        print("Y es mayor que 0");
     } else {
        print("Y es menor o igual a 0");
+    }
+    print(x);
+    print(y);
+    x = sum(y) + 2;
+    print(x);
+    x = sum(y) + sum(x);
+    print(x);
+    int z = x + 2*y;
+    print(z);
+    if(z){
+        int j = z + 2 + sum(x);
+        print(j);
+    } else {
+        int k = y + 3*x;
+        print(k);
     }
 }
