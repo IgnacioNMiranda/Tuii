@@ -173,8 +173,8 @@ def p_term(p):
     '''
     term : term operator DIGIT
          | DIGIT
-         | term operator ID
-         | ID
+         | term operator id
+         | id
          | term operator sum_function
          | sum_function
     '''
@@ -187,7 +187,7 @@ def p_term(p):
 # sum_function → SUM LP ID RP PC
 def p_sum_function(p):
     '''
-    sum_function : SUM LP ID RP PC
+    sum_function : SUM LP id RP PC
     '''
     p[0] = ('sum', p[3])
 
@@ -206,7 +206,7 @@ def p_operator(p):
 # single_op → ID IGUAL term PC
 def p_single_op(p):
     '''
-    single_op : ID IGUAL term PC
+    single_op : id IGUAL term PC
     '''
     p[0] = ('=', p[1], p[3])
 
@@ -214,7 +214,7 @@ def p_single_op(p):
 # print → PRINT LP (ID | TEXT) RP PC
 def p_print(p):
     '''
-    print : PRINT LP ID RP PC
+    print : PRINT LP id RP PC
           | PRINT LP TEXT RP PC
     '''
     p[0] = ('print', p[3])
@@ -232,11 +232,11 @@ def p_if_stmt(p):
         p[0] = ('if', p[3], p[6], 'else', p[10])
 
 
-#def p_id(p):
-#   '''
-#  id : ID
-# '''
-# #p[0] = ('var', p[1])
+def p_id(p):
+   '''
+   id : ID
+   '''
+   p[0] = ('var', p[1])
 
 
 def p_error(p):
