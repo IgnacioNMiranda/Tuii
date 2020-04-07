@@ -53,18 +53,21 @@ t_DIV = r'\/'
 t_IGUAL = r'\='
 
 
+# Definición de la Regex que define al token ID
 def t_ID(t):
     r'[A-Za-z]([A-Za-z0-9]){0,14}'
     t.type = reserved.get(t.value, 'ID')
     return t
 
 
+# Definición de la Regex que define al token DIGIT
 def t_DIGIT(t):
     r'\-[1-9][0-9]*|[0-9]+'
     t.value = int(t.value)
     return t
 
 
+# Definición de la Regex que define al token TEXT, esto es lo que va dentro de la instrucción print
 def t_TEXT(t):
     r'"[A-Za-z0-9: ]+"'
     t.type = reserved.get(t.value, 'TEXT')
@@ -83,7 +86,7 @@ def t_error(t):
     t.lexer.skip(1)
 
 
-# Validación de espacios en blanco#
+# Validación de espacios en blanco y tabulaciones#
 t_ignore = " \t"
 
 
@@ -128,6 +131,7 @@ def p_main(p):
     '''
     p[0] = p[3]
 
+
 # vacio →
 def p_vacio(p):
     '''
@@ -168,6 +172,7 @@ def p_int_decl(p):
     '''
     p[0] = ('=', p[2], p[4])
 
+
 # term → term operator_plus_minus term_2 | term_2
 def p_term(p):
     '''
@@ -178,6 +183,7 @@ def p_term(p):
         p[0] = p[1]
     else:
         p[0] = (p[2], p[1], p[3])
+
 
 def p_term_2(p):
     '''
@@ -251,6 +257,7 @@ def p_if_stmt(p):
         p[0] = ('if', p[3], p[6], 'else', p[10])
 
 
+# Esta regla es usada para obtener el valor de una variable que ya ha sido inicializada
 # id → ID
 def p_id(p):
    '''
@@ -264,10 +271,12 @@ def p_error(p):
     if not p:
         print("Error de Sintaxis")
 
+
 # Ambiente
 env = {}
 
 
+# Ejecución de reglas sintácticas y asignación de tokens como variables y almacenadas en diccionario
 def run(p):
     if type(p) == tuple:
         if p[0] == "+":
@@ -277,7 +286,7 @@ def run(p):
         elif p[0] == "*":
             return run(p[1]) * run(p[2])
         elif p[0] == "/":
-            return run(p[1]) / run(p[2])
+            return int(run(p[1]) / run(p[2]))
         elif p[0] == "=":  # Asignación de variables
             env[p[1]] = run(p[2])
             print(env)
